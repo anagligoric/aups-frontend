@@ -5,7 +5,7 @@ import { User } from '../models/User'
 
 export function login (username: string, password: string) {
   return axios
-    .post('http://localhost:8080/api/auth//login', {
+    .post('http://localhost:8081/api/auth//login', {
       username,
       password
     })
@@ -20,7 +20,7 @@ export function login (username: string, password: string) {
 
 export function register (user: User) {
   return axios
-    .post('http://localhost:8080/api/auth/registeruser', {
+    .post('http://localhost:8081/api/auth/registeruser', {
       ime: user.ime,
       prezime: user.prezime,
       email: user.email,
@@ -51,4 +51,8 @@ export const logout = () => {
 export const getToken = () => {
   const token = localStorage.getItem('token')
   return token ? JSON.parse(token) : ''
+}
+
+export function getAllAlat () {
+  return axios.get('http://localhost:8081/api/alat')
 }
