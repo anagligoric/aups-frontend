@@ -1,4 +1,4 @@
-export interface Alat {
+export interface Tool {
     id: number
     name: string
 }

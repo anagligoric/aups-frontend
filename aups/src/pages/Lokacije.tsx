@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { Header } from '../components/Header'
-import { Lokacija } from '../models/Lokacija'
+import { Lokacija } from '../models/Location'
 import { getAllLokacija } from '../services/service'
 import '../assets/lokacije.css'
 

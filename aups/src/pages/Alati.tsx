@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Header } from '../components/Header'
-import { Alat } from '../models/Alat'
+import { Alat } from '../models/Tool'
 import { getAllAlat } from '../services/service'
 
 const Alati = () => {
