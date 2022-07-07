@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react'
 import { Header } from '../components/Header'
 import { Tool } from '../models/Tool'
-import { getAllAlat } from '../services/ToolService'
+import { ConfirmationDialogComponent } from '../dialogs/ConfirmationDialog'
+import { getAllTools, deleteToolById } from '../services/ToolService'
 import Paper from '@mui/material/Paper'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
@@ -20,15 +21,20 @@ import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit'
 import TableFooter from '@mui/material/TableFooter'
 import TablePagination from '@mui/material/TablePagination'
+import { useCloseableSnackbar } from '../hooks/use-closeable-snackbar-hook'
 
 const Tools = () => {
   const { classes: tableClasses } = useTableStyles()
+  const { enqueueErrorSnackbar, enqueueSuccessSnackbar } = useCloseableSnackbar()
+
   const [toolsDb, setToolsDb] = useState<Tool[]>([])
   const [paginationPage, setPaginationPage] = useState(0)
   const [paginationRows, setPaginationRows] = useState(10)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [selectedTool, setSelectedTool] = useState<Tool>()
 
   useEffect(() => {
-    getAllAlat().then((res:any) => {
+    getAllTools().then((res:any) => {
       setToolsDb(res.data)
     })
   })
@@ -41,6 +47,21 @@ const Tools = () => {
     setPaginationRows(+event.target.value)
     setPaginationPage(0)
   }
+
+  function deleteTool (tool: Tool) {
+    setSelectedTool(tool)
+    setShowDeleteDialog(true)
+  }
+
+  function handleConfirm () {
+    setShowDeleteDialog(false)
+    deleteToolById(selectedTool?.id || -1).then(() => {
+      enqueueSuccessSnackbar('Tool successfully deleted')
+      setShowDeleteDialog(false)
+    }).catch(() =>
+      enqueueErrorSnackbar('Something went wrong'))
+  }
+
   return (
         <>
             <Header/>
@@ -84,7 +105,7 @@ const Tools = () => {
                                 <TableCell className={tableClasses.tableRow}>
                                     <Tooltip
                                         title={'Delete tool'}
-                                        onClick={() => {}}
+                                        onClick={() => { deleteTool(tool) }}
                                     >
                                         <IconButton size={'small'} color="error">
                                             <DeleteIcon />
@@ -111,6 +132,14 @@ const Tools = () => {
                     </TableFooter>
                 </Table>
             </div>
+                {showDeleteDialog && (
+                    <ConfirmationDialogComponent
+                        onConfirm={handleConfirm}
+                        onCancel={() => setShowDeleteDialog(false)}
+                        text={'Are you sure you want to delete this tool?'}
+                        isDialogOpen={showDeleteDialog}
+                    />
+                )}
             </Paper>
 
         </>

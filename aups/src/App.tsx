@@ -11,7 +11,7 @@ import Tools from './pages/Tools'
 import Home from './pages/Home'
 import { Login } from './pages/Login'
 import { Register } from './pages/Register'
-import Lokacije from './pages/Lokacije'
+import { SnackbarProvider } from 'notistack'
 
 function App () {
   const theme = createTheme({
@@ -31,15 +31,16 @@ function App () {
   })
 
   return (
-      <ThemeProvider theme={theme}>
-          <Routes>
-            <Route path="/" element={<Home /> } />
-            <Route path="/alati" element={<Tools /> } />
-            <Route path="/lokacije" element={<Lokacije /> } />
-            <Route path="/login" element={<Login/>} />
-            <Route path="/register" element={<Register/>} />
-          </Routes>
-      </ThemeProvider>
+      <SnackbarProvider>
+        <ThemeProvider theme={theme}>
+            <Routes>
+              <Route path="/" element={<Home /> } />
+              <Route path="/alati" element={<Tools /> } />
+              <Route path="/login" element={<Login/>} />
+              <Route path="/register" element={<Register/>} />
+            </Routes>
+        </ThemeProvider>
+      </SnackbarProvider>
   )
 }
 

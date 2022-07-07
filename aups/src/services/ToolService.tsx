@@ -1,15 +1,15 @@
 import axios from 'axios'
 import { authHeader } from './service'
 
-export function getAllAlat () {
+export function getAllTools () {
   return axios.get('http://localhost:8081/api/tool')
 }
 
-export function getAlatById (id: string) {
+export function getToolById (id: string) {
   return axios.get(`http://localhost:8081/api/tool/${id}`)
 }
 
-export function updateAlat (id: string, name: string) {
+export function updateTool (id: string, name: string) {
   return axios
     .put(`http://localhost:8081/api/tool/${id}`, {
       id,
@@ -17,6 +17,6 @@ export function updateAlat (id: string, name: string) {
     }, { headers: { Authorization: authHeader() } })
 }
 
-export function deleteAlatById (id: string) {
-  return axios.delete(`http://localhost:8081/api/alat/${id}`, { headers: { Authorization: authHeader() } })
+export function deleteToolById (id: number) {
+  return axios.delete(`http://localhost:8081/api/tool/${id}`, { headers: { Authorization: authHeader() } })
 }
