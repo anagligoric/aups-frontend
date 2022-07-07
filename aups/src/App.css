@@ -36,3 +36,8 @@
     transform: rotate(360deg);
   }
 }
+
+div.MuiTablePagination-actions {
+  display: flex;
+  margin-right: 90px;
+}
