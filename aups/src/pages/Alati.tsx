@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Header } from '../components/Header'
 import { Alat } from '../models/Alat'
 import { getAllAlat } from '../services/service'
@@ -15,15 +16,25 @@ const Alati = () => {
   return (
   <>
     <Header/>
-    <div>ALATI</div>
-    <div className='alati'>
-          {alatDB.map((alat, id) => (
-          <div className="alat" key={alat.id}>
-            <div><h3>{alat.naziv} </h3>
-      </div>
-          </div>
-          ))}
-          </div>
+          <div className="alati">
+  <table>
+    <tr>
+      <th>Id</th>
+      <th>Naziv</th>
+      <td></td>
+      <td></td>
+    </tr>
+    {alatDB.map((alat, id) => (
+    <tr key={alat.id}>
+      <td>{alat.id}</td>
+      <td>{alat.name}</td>
+      <td><Link to={`/editAlat/${alat.id}`}><button>edit</button></Link></td>
+      <td><button>delete</button></td>
+    </tr>
+    ))}
+
+  </table>
+</div>
   </>
   )
 }

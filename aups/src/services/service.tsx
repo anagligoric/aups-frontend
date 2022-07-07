@@ -53,10 +53,6 @@ export const getToken = () => {
   return token ? JSON.parse(token) : ''
 }
 
-export function getAllAlat () {
-  return axios.get('http://localhost:8081/api/alat')
-}
-
 export function getAllLokacija () {
-  return axios.get('http://localhost:8081/api/lokacija')
+  return axios.get('http://localhost:8081/api/location')
 }

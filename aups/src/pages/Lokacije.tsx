@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Header } from '../components/Header'
 import { Lokacija } from '../models/Lokacija'
 import { getAllLokacija } from '../services/service'
+import '../assets/lokacije.css'
 
 const Lokacije = () => {
   const [lokacijaDB, setLokacijaDB] = useState<Lokacija[]>([])
@@ -15,18 +16,29 @@ const Lokacije = () => {
   return (
   <>
     <Header/>
-    <div>LOKACIJE</div>
-    <div className='alati'>
-          {lokacijaDB.map((lokacija, id) => (
-          <div className="alat" key={lokacija.id}>
-            <div>
-                <h3>{lokacija.grad} </h3>
-                <p>{lokacija.ulica}</p>
-                <p>{lokacija.broj}</p>
-      </div>
-          </div>
-          ))}
-          </div>
+
+          <div className="alati">
+  <table>
+    <tr>
+      <th>City</th>
+      <th>Street</th>
+      <th>Number</th>
+      <td></td>
+      <td></td>
+    </tr>
+    {lokacijaDB.map((lokacija, id) => (
+    <tr key={lokacija.id}>
+      <td>{lokacija.city}</td>
+      <td>{lokacija.street}</td>
+      <td>{lokacija.number}</td>
+      <td><button>edit</button></td>
+      <td><button>delete</button></td>
+
+    </tr>
+    ))}
+
+  </table>
+</div>
   </>
   )
 }
