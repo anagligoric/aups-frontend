@@ -5,7 +5,7 @@ import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material//Button'
-import { useStyles } from './confirmation-dialog.style'
+import { useStyles } from './dialog.style'
 
 export interface ConfirmationDialogComponentProps {
     isDialogOpen: boolean;

@@ -10,14 +10,7 @@ const useTableStyles = makeStyles()(() => ({
     paddingTop: Spacing[5],
     paddingBottom: Spacing[5]
   },
-  orderbookHead: {
-    paddingTop: Spacing[5],
-    paddingBottom: Spacing[5],
-    color: grey[700],
-    fontWeight: 'bold',
-    fontSize: '12px'
-  },
-  paddedHeader: { paddingLeft: Spacing[25] },
+
   table: {
     borderSpacing: 0,
     borderCollapse: 'separate'

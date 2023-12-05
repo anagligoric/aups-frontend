@@ -13,7 +13,8 @@ import { Login } from './pages/Login'
 import { Register } from './pages/Register'
 import { SnackbarProvider } from 'notistack'
 import { getToken } from './services/AuthService'
-import Locations from './pages/Location'
+import Locations from './pages/Locations'
+import { LightMuiButton } from './models/MuiButton'
 
 function App () {
   const [token, setToken] = useState(getToken())
@@ -33,6 +34,23 @@ function App () {
         light: '#82e9de',
         dark: '#00867d'
       }
+    },
+    components: {
+      MuiButton: LightMuiButton,
+      MuiAppBar: {
+        defaultProps: {
+          sx: {
+            backgroundColor: 'red'
+          }
+        }
+      },
+      MuiTypography: {
+        defaultProps: {
+          sx: {
+            padding: 0
+          }
+        }
+      }
     }
   })
 
@@ -45,7 +63,6 @@ function App () {
               <Route path="/login" element={<Login/>} />
               <Route path="/register" element={<Register/>} />
               <Route path="/locations" element={<Locations/>} />
-
             </Routes>
         </ThemeProvider>
       </SnackbarProvider>

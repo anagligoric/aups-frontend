@@ -1,107 +1,35 @@
-body{
-    padding-top: 150px;
-
+body {
+  padding-top: 150px;
 }
-  /* Center the avatar image inside this container */
-  .imgcontainer {
-    text-align: center;
-    margin: 24px 0 12px 0;
+
+/* Center the avatar image inside this container */
+.imgcontainer {
+  text-align: center;
+  margin: 24px 0 12px 0;
+}
+
+/* Avatar image */
+img.avatar {
+  width: 15%;
+  border-radius: 50%;
+}
+
+/* Add padding to containers */
+.container {
+  padding: 16px;
+}
+
+
+@media screen and (min-width: 880px) {
+  .loginForm {
+    margin-left: 20%;
+    margin-right: 20%;
   }
-  
-  /* Avatar image */
-  img.avatar {
-    width: 15%;
-    border-radius: 50%;
+}
+
+@media screen and (min-width: 1024px) {
+  .loginForm {
+    margin-left: 30%;
+    margin-right: 30%;
   }
-  
-  /* Add padding to containers */
-  .container {
-    padding: 16px;
-  }
-  
-  /* The "Forgot password" text */
-  span.psw {
-    float: right;
-    padding-top: 16px;
-  }
-
-  @media screen and (min-width: 880px) {
-    .loginForm {
-        margin-left: 20%;
-        margin-right: 20%;
-        border: solid black;
-      }
-  }
-
-  @media screen and (min-width: 1024px) {
-    .loginForm {
-        margin-left: 30%;
-        margin-right: 30%;
-        border: solid black;
-      }
-  }
-
-  .checkbox-dropdown {
-    border: 1px solid black;
-    padding: 10px;
-    position: relative;
-    margin: 0 auto;
-    user-select: none;
-}
-
-/* Display CSS arrow to the right of the dropdown text */
-.checkbox-dropdown:after {
-    content:'';
-    height: 0;
-    position: absolute;
-    width: 0;
-    border: 6px solid transparent;
-    border-top-color: #000;
-    top: 50%;
-    right: 10px;
-    margin-top: -3px;
-}
-
-/* Reverse the CSS arrow when the dropdown is active */
-.checkbox-dropdown.is-active:after {
-    border-bottom-color: #000;
-    border-top-color: #fff;
-    margin-top: -9px;
-}
-
-.checkbox-dropdown-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    position: absolute;
-    top: 100%; /* align the dropdown right below the dropdown text */
-    border: inherit;
-    border-top: none;
-    left: -1px; /* align the dropdown to the left */
-    right: -1px; /* align the dropdown to the right */
-    opacity: 0; /* hide the dropdown */
-    background-color: white;
-    transition: opacity 0.4s ease-in-out;
-    height: 83px;
-    overflow: scroll;
-    overflow-x: hidden;
-    pointer-events: none; /* avoid mouse click events inside the dropdown */
-    border-bottom-color: #000;
-
-}
-.is-active .checkbox-dropdown-list {
-    opacity: 1; /* display the dropdown */
-    pointer-events: auto; /* make sure that the user still can select checkboxes */
-}
-
-.checkbox-dropdown-list li label {
-    display: block;
-    border: 1px solid black;
-    padding: 10px;
-    transition: all 0.2s ease-out;
-}
-
-.checkbox-dropdown-list li label:hover {
-    background-color: white;
-    color: black;
 }

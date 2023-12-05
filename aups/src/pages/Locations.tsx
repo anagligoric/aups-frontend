@@ -74,7 +74,7 @@ const Locations = () => {
         <>
             <Header/>
             <Paper className={tableClasses.mainTable}>
-                <AppBar position="static">
+                <AppBar position="static" >
                     <Toolbar color="primary">
                         <Typography variant="h6">{'Locations'}</Typography>
                         <div className={tableClasses.header}>
