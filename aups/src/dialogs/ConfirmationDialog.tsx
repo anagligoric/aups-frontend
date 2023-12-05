@@ -28,9 +28,9 @@ export function ConfirmationDialogComponent (props: ConfirmationDialogComponentP
   const { classes } = useStyles()
 
   return (
-        <Dialog fullWidth={false} open={props.isDialogOpen} onClose={handleCancel} data-testid="confirmation-dialog">
+        <Dialog fullWidth={false} open={props.isDialogOpen} onClose={handleCancel} data-testid="confirmation-dialog" classes={{ root: 'no-padding' }}>
             <DialogTitle classes={{ root: 'no-padding' }}>
-                <AppBar position="static" elevation={1}>
+                <AppBar position="static" elevation={1} classes={{ root: 'no-padding' }}>
                     <Toolbar className={classes.noPadding}>{props.text}</Toolbar>
                 </AppBar>
             </DialogTitle>
@@ -39,7 +39,6 @@ export function ConfirmationDialogComponent (props: ConfirmationDialogComponentP
                 <Button
                     onClick={handleConfirm}
                     variant="text"
-                    autoFocus
                     data-testid="yes-button"
                 >
                     {'Yes'}

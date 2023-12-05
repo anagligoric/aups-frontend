@@ -40,16 +40,13 @@ function App () {
       MuiAppBar: {
         defaultProps: {
           sx: {
-            backgroundColor: 'red'
-          }
-        }
-      },
-      MuiTypography: {
-        defaultProps: {
-          sx: {
+            backgroundColor: 'red',
             padding: 0
           }
         }
+      },
+      MuiDialogTitle: {
+        styleOverrides: { root: { padding: 0 } }
       }
     }
   })
