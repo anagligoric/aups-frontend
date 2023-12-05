@@ -18,16 +18,14 @@ code {
 form {
   margin-left: 10%;
   margin-right: 10%;
-  border: solid #523221;
+  /* border: solid #523221; */
 }
 
 /* Full-width inputs */
 input[type=text], input[type=password], input[type=url], input[type=number], input[type=date] {
   width: 100%;
-  padding: 12px 20px;
   margin: 8px 0;
   display: inline-block;
-  border: 1px solid #523221;
   box-sizing: border-box;
 }
 

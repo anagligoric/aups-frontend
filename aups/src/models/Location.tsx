@@ -1,7 +1,7 @@
 import { Client } from './Client'
 
 export interface Location {
-    id: number
+    id?: number
     city: string
     street: string
     number: number

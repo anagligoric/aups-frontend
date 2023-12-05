@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
 
@@ -12,13 +12,19 @@ import Home from './pages/Home'
 import { Login } from './pages/Login'
 import { Register } from './pages/Register'
 import { SnackbarProvider } from 'notistack'
+import { getToken } from './services/AuthService'
+import Locations from './pages/Location'
 
 function App () {
-  const theme = createTheme({
+  const [token, setToken] = useState(getToken())
+  useEffect(() => {
+    setToken(getToken())
+  }, [])
 
+  const theme = createTheme({
     palette: {
       primary: {
-        light: '#63b8ff',
+        light: '#ADB59F',
         main: '#0989e3',
         dark: '#005db0'
       },
@@ -34,10 +40,12 @@ function App () {
       <SnackbarProvider>
         <ThemeProvider theme={theme}>
             <Routes>
-              <Route path="/" element={<Home /> } />
-              <Route path="/alati" element={<Tools /> } />
+              <Route path="/" element={token ? (<Home />) : <Login /> } />
+              <Route path="/tools" element={<Tools /> } />
               <Route path="/login" element={<Login/>} />
               <Route path="/register" element={<Register/>} />
+              <Route path="/locations" element={<Locations/>} />
+
             </Routes>
         </ThemeProvider>
       </SnackbarProvider>

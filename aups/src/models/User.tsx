@@ -1,9 +1,9 @@
 import { Role } from './Role'
 
 export interface User {
-    ime: string
-    prezime: string
-    lozinka: string
+    firstName: string
+    surname: string
+    password: string
     email: string
     role: Role
   }

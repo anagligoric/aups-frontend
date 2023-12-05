@@ -3,10 +3,10 @@ import jwtDecode from 'jwt-decode'
 import Token from '../models/Token'
 import { User } from '../models/User'
 
-export function login (username: string, password: string) {
+export function login (email: string, password: string) {
   return axios
-    .post('http://localhost:8081/api/auth//login', {
-      username,
+    .post('http://localhost:8081/api/auth/login', {
+      email,
       password
     })
     .then((response: { data: { token: string } }) => {
@@ -21,14 +21,15 @@ export function login (username: string, password: string) {
 export function register (user: User) {
   return axios
     .post('http://localhost:8081/api/auth/registeruser', {
-      ime: user.ime,
-      prezime: user.prezime,
+      firstName: user.firstName,
+      surname: user.surname,
       email: user.email,
       role: user.role,
-      lozinka: user.lozinka
+      password: user.password
     })
     .then((response: { data: { token: string } }) => {
       if (response.data.token) {
+        console.log(response.data.token)
         console.log('token ' + JSON.stringify(response.data))
         const decoded: Token = jwtDecode<Token>(response.data.token)
         localStorage.setItem('token', JSON.stringify(response.data))
@@ -51,8 +52,4 @@ export const logout = () => {
 export const getToken = () => {
   const token = localStorage.getItem('token')
   return token ? JSON.parse(token) : ''
-}
-
-export function getAllLokacija () {
-  return axios.get('http://localhost:8081/api/location')
 }

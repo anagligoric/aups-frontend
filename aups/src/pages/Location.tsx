@@ -1,9 +1,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { Header } from '../components/Header'
-import { Tool } from '../models/Tool'
 import { ConfirmationDialogComponent } from '../dialogs/ConfirmationDialog'
-import { getAllTools, deleteToolById } from '../services/ToolService'
 import Paper from '@mui/material/Paper'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
@@ -22,20 +20,25 @@ import EditIcon from '@mui/icons-material/Edit'
 import TableFooter from '@mui/material/TableFooter'
 import TablePagination from '@mui/material/TablePagination'
 import { useCloseableSnackbar } from '../hooks/use-closeable-snackbar-hook'
+import { Location } from '../models/Location'
+import { deleteLocationById, getAllLocation } from '../services/LocationService'
+import { CreateLocationDialog } from '../dialogs/CreateLocationDialog'
 
-const Tools = () => {
+const Locations = () => {
   const { classes: tableClasses } = useTableStyles()
   const { enqueueErrorSnackbar, enqueueSuccessSnackbar } = useCloseableSnackbar()
 
-  const [toolsDb, setToolsDb] = useState<Tool[]>([])
+  const [locationsDb, setLocationsDb] = useState<Location[]>([])
   const [paginationPage, setPaginationPage] = useState(0)
   const [paginationRows, setPaginationRows] = useState(10)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  const [selectedTool, setSelectedTool] = useState<Tool>()
+  const [showCreateDialog, setShowCreateDialog] = useState(false)
+
+  const [selectedLocation, setSelectedLocation] = useState<Location>()
 
   useEffect(() => {
-    getAllTools().then((res:any) => {
-      setToolsDb(res.data)
+    getAllLocation().then((res:any) => {
+      setLocationsDb(res.data)
     })
   }, [])
 
@@ -48,18 +51,23 @@ const Tools = () => {
     setPaginationPage(0)
   }
 
-  function deleteTool (tool: Tool) {
-    setSelectedTool(tool)
+  function deleteLocation (location: Location) {
+    setSelectedLocation(location)
     setShowDeleteDialog(true)
   }
 
-  function handleConfirm () {
+  function handleConfirmDelete () {
     setShowDeleteDialog(false)
-    deleteToolById(selectedTool?.id || -1).then(() => {
-      enqueueSuccessSnackbar('Tool successfully deleted')
+    deleteLocationById(selectedLocation?.id || -1).then(() => {
+      enqueueSuccessSnackbar('Location successfully deleted')
       setShowDeleteDialog(false)
     }).catch(() =>
       enqueueErrorSnackbar('Something went wrong'))
+  }
+
+  function handleConfirmCreate () {
+    setShowCreateDialog(false)
+    // TODO add logic for creation
   }
 
   return (
@@ -68,9 +76,9 @@ const Tools = () => {
             <Paper className={tableClasses.mainTable}>
                 <AppBar position="static">
                     <Toolbar color="primary">
-                        <Typography variant="h6">{'Tools'}</Typography>
+                        <Typography variant="h6">{'Locations'}</Typography>
                         <div className={tableClasses.header}>
-                            <Tooltip title={'Add tool'} onClick={() => {}}>
+                            <Tooltip title={'Add location'} onClick={() => { setShowCreateDialog(true) }}>
                                 <IconButton className={tableClasses.active} size="large">
                                     <AddIcon />
                                 </IconButton>
@@ -82,15 +90,19 @@ const Tools = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>{'Name'}</TableCell>
-                            <TableCell/>
-                            <TableCell/>
+                            <TableCell>{'City'}</TableCell>
+                            <TableCell>{'Street'}</TableCell>
+                            <TableCell>{'Number'}</TableCell>
+                            <TableCell />
+                            <TableCell />
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {toolsDb.slice(paginationPage * paginationRows, paginationPage * paginationRows + paginationRows).map((tool: Tool) => (
-                            <TableRow key={tool.id} classes={{ root: 'small-row datatableRow' }}>
-                                <TableCell className={tableClasses.tableRow}>{tool.name}</TableCell>
+                        {locationsDb.slice(paginationPage * paginationRows, paginationPage * paginationRows + paginationRows).map((location: Location) => (
+                            <TableRow key={location.id} classes={{ root: 'small-row datatableRow' }}>
+                                <TableCell className={tableClasses.tableRow}>{location.city}</TableCell>
+                                <TableCell className={tableClasses.tableRow}>{location.street}</TableCell>
+                                <TableCell className={tableClasses.tableRow}>{location.number}</TableCell>
                                 <TableCell className={tableClasses.tableRow}>
                                     <Tooltip
                                         color="primary"
@@ -105,7 +117,7 @@ const Tools = () => {
                                 <TableCell className={tableClasses.tableRow}>
                                     <Tooltip
                                         title={'Delete tool'}
-                                        onClick={() => { deleteTool(tool) }}
+                                        onClick={() => { deleteLocation(location) }}
                                     >
                                         <IconButton size={'small'} color="error">
                                             <DeleteIcon />
@@ -119,7 +131,7 @@ const Tools = () => {
                         <TableRow>
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 15, 100]}
-                                count={toolsDb.length}
+                                count={locationsDb.length}
                                 rowsPerPage={paginationRows}
                                 colSpan={9}
                                 page={paginationPage}
@@ -134,10 +146,18 @@ const Tools = () => {
             </div>
                 {showDeleteDialog && (
                     <ConfirmationDialogComponent
-                        onConfirm={handleConfirm}
+                        onConfirm={handleConfirmDelete}
                         onCancel={() => setShowDeleteDialog(false)}
                         text={'Are you sure you want to delete this tool?'}
                         isDialogOpen={showDeleteDialog}
+                    />
+                )}
+                {showCreateDialog && (
+                    <CreateLocationDialog
+                        onConfirm={handleConfirmCreate}
+                        onCancel={() => setShowCreateDialog(false)}
+                        text={'New Location'}
+                        isDialogOpen={showCreateDialog}
                     />
                 )}
             </Paper>
@@ -145,4 +165,4 @@ const Tools = () => {
         </>
   )
 }
-export default Tools
+export default Locations

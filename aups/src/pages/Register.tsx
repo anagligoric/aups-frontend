@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../assets/login.css'
-import { register } from '../services/service'
+import { register } from '../services/AuthService'
 import { User } from '../models/User'
 import { Role } from '../models/Role'
 
 export const Register = () => {
-  const [ime, setIme] = useState<string>('')
-  const [prezime, setPrezime] = useState<string>('')
+  const [firstName, setFirstName] = useState<string>('')
+  const [surname, setSurname] = useState<string>('')
   const [email, setEmail] = useState<string>('')
-  const [lozinka, setLozinka] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
   const nav = useNavigate()
 
   function handleSubmit (event:any) {
@@ -19,10 +19,10 @@ export const Register = () => {
       ime: 'ROLE_USER'
     }
     const user: User = {
-      ime,
-      prezime,
+      firstName,
+      surname,
       email,
-      lozinka,
+      password,
       role
     }
     register(user)
@@ -38,10 +38,10 @@ export const Register = () => {
     <img src="avatar.png" alt="Avatar" className="avatar"/>
   </div>
   <div className="container">
-    <input type="text" placeholder="Enter Ime" name="ime" onChange={event => { setIme(event.target.value) }} value = {ime} required/>
-    <input type="text" placeholder="Enter Prezime" name="prezime" onChange={event => { setPrezime(event.target.value) }} value = {prezime} required/>
+    <input type="text" placeholder="Enter Ime" name="ime" onChange={event => { setFirstName(event.target.value) }} value = {firstName} required/>
+    <input type="text" placeholder="Enter Prezime" name="prezime" onChange={event => { setSurname(event.target.value) }} value = {surname} required/>
     <input type="text" placeholder="Enter Email" name="email" onChange={event => { setEmail(event.target.value) }} value = {email} required/>
-    <input type="password" placeholder="Enter Lozinka" name="lozinka" onChange={event => { setLozinka(event.target.value) }} value = {lozinka} required/>
+    <input type="password" placeholder="Enter Lozinka" name="lozinka" onChange={event => { setPassword(event.target.value) }} value = {password} required/>
     <button type="submit">Register</button>
     <label>
       <input type="checkbox" name="remember"/> Remember me

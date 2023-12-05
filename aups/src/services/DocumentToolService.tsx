@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Tool } from '../models/Tool'
 import { Document } from '../models/Document'
 
-import { authHeader } from './service'
+import { authHeader } from './AuthService'
 
 export function getAllDocumentTool () {
   return axios.get('http://localhost:8081/api/document/tool')

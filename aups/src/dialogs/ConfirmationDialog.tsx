@@ -6,19 +6,12 @@ import Toolbar from '@mui/material/Toolbar'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material//Button'
 import { useStyles } from './confirmation-dialog.style'
-import DialogContent from '@mui/material/DialogContent'
-import LinearProgress from '@mui/material/LinearProgress'
-import DialogContentText from '@mui/material/DialogContentText'
 
 export interface ConfirmationDialogComponentProps {
     isDialogOpen: boolean;
     onConfirm: () => void;
     onCancel?: () => void;
     text: string;
-    title?: string;
-    loading?: boolean;
-    yesButtonText?: string;
-    noButtonText?: string;
 }
 
 export function ConfirmationDialogComponent (props: ConfirmationDialogComponentProps) {
@@ -38,32 +31,22 @@ export function ConfirmationDialogComponent (props: ConfirmationDialogComponentP
         <Dialog fullWidth={false} open={props.isDialogOpen} onClose={handleCancel} data-testid="confirmation-dialog">
             <DialogTitle classes={{ root: 'no-padding' }}>
                 <AppBar position="static" elevation={1}>
-                    <Toolbar className={classes.noPadding} color="primary">{props.title || props.text}</Toolbar>
+                    <Toolbar className={classes.noPadding}>{props.text}</Toolbar>
                 </AppBar>
             </DialogTitle>
 
-            {props.title && (
-                <DialogContent>
-                    <DialogContentText component={'span'}>
-                        <p>{props.text}</p>
-                    </DialogContentText>
-                </DialogContent>
-            )}
-
-            {!!props.loading && <LinearProgress />}
             <DialogActions className={classes.dialogActions}>
                 <Button
                     onClick={handleConfirm}
-                    disabled={!!props.loading}
                     variant="text"
                     autoFocus
                     data-testid="yes-button"
                 >
-                    {props.yesButtonText || 'Yes'}
+                    {'Yes'}
                 </Button>
                 {props.onCancel && (
-                    <Button onClick={props.onCancel} disabled={!!props.loading} variant="text" data-testid="no-button">
-                        {props.noButtonText || 'No'}
+                    <Button onClick={props.onCancel} variant="text" data-testid="no-button" className={classes.dialogButton} color={'primary'}>
+                        {'No'}
                     </Button>
                 )}
             </DialogActions>

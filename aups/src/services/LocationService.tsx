@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { authHeader } from './service'
+import { authHeader } from './AuthService'
 
 export function getAllLocation () {
   return axios.get('http://localhost:8081/api/location')
@@ -19,6 +19,6 @@ export function updateLocation (id: string, city: string, street:string, number:
     }, { headers: { Authorization: authHeader() } })
 }
 
-export function deleteLocationById (id: string) {
+export function deleteLocationById (id: number) {
   return axios.delete(`http://localhost:8081/api/location/${id}`, { headers: { Authorization: authHeader() } })
 }

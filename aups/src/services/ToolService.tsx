@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { authHeader } from './service'
+import { authHeader } from './AuthService'
 
 export function getAllTools () {
   return axios.get('http://localhost:8081/api/tool')
