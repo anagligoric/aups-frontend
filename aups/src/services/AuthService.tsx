@@ -16,7 +16,6 @@ export function login (email: string, password: string) {
         const decoded: Token = jwtDecode<Token>(response.data.token)
         const newTokenValue = JSON.stringify(response.data)
         const newRoleValue = JSON.stringify(decoded.role)
-        console.log(newRoleValue)
         localStorage.setItem('token', newTokenValue)
         localStorage.setItem('roles', newRoleValue)
 
@@ -47,8 +46,6 @@ export function register (user: User) {
     })
     .then((response: { data: { token: string } }) => {
       if (response.data.token) {
-        console.log(response.data.token)
-        console.log('token ' + JSON.stringify(response.data))
         const decoded: Token = jwtDecode<Token>(response.data.token)
         localStorage.setItem('token', JSON.stringify(response.data))
         localStorage.setItem('roles', JSON.stringify(decoded.role))
@@ -89,7 +86,5 @@ export const getToken = () => {
 
 export const getRole = () => {
   const role = localStorage.getItem('roles')
-  console.log(role)
-
   return role ? JSON.parse(role) : ''
 }

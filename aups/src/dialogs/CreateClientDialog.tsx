@@ -21,10 +21,6 @@ export interface CreateClientDialogProps {
 export function CreateClientDialog (props: CreateClientDialogProps) {
   const { classes } = useStyles()
 
-  useEffect(() => {
-    console.log(props.selectedClient)
-  }, [props.selectedClient])
-
   const [firstName, setFirstName] = useState(props.selectedClient?.firstName || '')
   const [surname, setSurname] = useState(props.selectedClient?.surname || '')
   const [phoneNumber, setPhoneNumber] = useState(props.selectedClient?.phoneNumber || '')
@@ -34,11 +30,9 @@ export function CreateClientDialog (props: CreateClientDialogProps) {
 
   function handleConfirm () {
     const client: Client = { firstName, surname, phoneNumber, city, street, number } as Client
-    console.log(client)
     if (props.selectedClient) {
       client.id = props.selectedClient?.id
     }
-    console.log(client)
     props.onConfirm(client)
   }
 

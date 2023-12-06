@@ -22,8 +22,6 @@ export function SidebarList (props: SidebarListProps) {
 
   useEffect(() => {
     const handleStorageChange = () => {
-      console.log('it is changed')
-      console.log(getRole())
       setIsAdmin(getRole() === 'ROLE_ADMIN')
     }
 
