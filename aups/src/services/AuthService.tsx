@@ -11,9 +11,27 @@ export function login (email: string, password: string) {
     })
     .then((response: { data: { token: string } }) => {
       if (response.data.token) {
+        const oldTokenValue = localStorage.getItem('token')
+        const oldRoleValue = localStorage.getItem('roles')
         const decoded: Token = jwtDecode<Token>(response.data.token)
-        localStorage.setItem('token', JSON.stringify(response.data))
-        localStorage.setItem('roles', JSON.stringify(decoded.role))
+        const newTokenValue = JSON.stringify(response.data)
+        const newRoleValue = JSON.stringify(decoded.role)
+        console.log(newRoleValue)
+        localStorage.setItem('token', newTokenValue)
+        localStorage.setItem('roles', newRoleValue)
+
+        const tokenEvent = new StorageEvent('storage', {
+          key: 'token',
+          oldValue: oldTokenValue,
+          newValue: newTokenValue
+        })
+        const roleEvent = new StorageEvent('storage', {
+          key: 'role',
+          oldValue: oldRoleValue,
+          newValue: newRoleValue
+        })
+        window.dispatchEvent(tokenEvent)
+        window.dispatchEvent(roleEvent)
       }
     })
 }
@@ -46,10 +64,32 @@ export const authHeader = () => {
 }
 
 export const logout = () => {
+  const oldTokenValue = localStorage.getItem('token')
+  const oldRoleValue = localStorage.getItem('roles')
   localStorage.removeItem('roles')
   localStorage.removeItem('token')
+  const tokenEvent = new StorageEvent('storage', {
+    key: 'token',
+    oldValue: oldTokenValue,
+    newValue: ''
+  })
+  const roleEvent = new StorageEvent('storage', {
+    key: 'roles',
+    oldValue: oldRoleValue,
+    newValue: ''
+  })
+  window.dispatchEvent(tokenEvent)
+  window.dispatchEvent(roleEvent)
 }
+
 export const getToken = () => {
   const token = localStorage.getItem('token')
   return token ? JSON.parse(token) : ''
+}
+
+export const getRole = () => {
+  const role = localStorage.getItem('roles')
+  console.log(role)
+
+  return role ? JSON.parse(role) : ''
 }

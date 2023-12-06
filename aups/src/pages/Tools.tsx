@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { Header } from '../components/Header'
 import { Tool } from '../models/Tool'
 import { ConfirmationDialogComponent } from '../dialogs/ConfirmationDialog'
 import { getAllTools, deleteToolById } from '../services/ToolService'
@@ -63,7 +62,6 @@ const Tools = () => {
 
   return (
         <>
-            <Header/>
             <Paper className={tableClasses.mainTable}>
                 <AppBar position="static">
                     <Toolbar color="primary">

@@ -1,39 +1,95 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import '../assets/header.css'
+import { Sidebar } from './SideBar'
+import IconButton from '@mui/material/IconButton'
+import MenuIcon from '@mui/icons-material/Menu'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import { Box, ButtonBase } from '@mui/material'
+import useStyles from '../pages/Header.style'
+import { useNavigate } from 'react-router-dom'
+import LogoutIcon from '@mui/icons-material/Logout'
 import { logout } from '../services/AuthService'
 import { ConfirmationDialogComponent } from '../dialogs/ConfirmationDialog'
 
 export const Header = () => {
   const nav = useNavigate()
+  const { classes } = useStyles()
   const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
-  function handleLogout (event:any) {
+  function handleLogout (event: any) {
     event.preventDefault()
     setOpenConfirmationDialog(true)
   }
 
   function onConfirm () {
+    setOpenConfirmationDialog(false)
     logout()
     nav('/login')
   }
 
-  return (<header className="header">
-  <nav className="nav container">
- <div className="nav__centered">
- <Link to="/" >
-   <img src="/settings.png" className= "nav__logo" alt="logo" /></Link></div>
-  <div className="nav__menu">
-      <ul className="nav__list">
-        <li onClick= {handleLogout} className="nav__item">
-          <img src="../logout.png" className= 'nav__icon' alt="search" />
-          <Link className="nav_item" to = "/"></Link>
-        </li>
-      </ul>
-    </div>
-  </nav>
-  <ConfirmationDialogComponent isDialogOpen={openConfirmationDialog} onConfirm={onConfirm} onCancel={() => setOpenConfirmationDialog(false)}text={'Are you sure you want to logout?'} />
-</header>
+  function openSidenav () {
+    setMenuOpen(true)
+  }
 
+  function closeSideNav () {
+    setMenuOpen(false)
+  }
+
+  return (
+    <>
+      <AppBar position="static">
+        <Toolbar>
+          <Box
+            display="flex"
+            width="100%"
+            alignItems="center"
+          >
+            <IconButton
+              data-testid="sidebar-menu"
+              onClick={openSidenav}
+              size="large"
+            >
+              <MenuIcon />
+            </IconButton>
+
+            <ButtonBase
+              onClick={() => { nav('/') }}
+              focusRipple
+              className={classes.logoButton}
+            >
+              <img src="/settings.png" className={classes.logoImage} alt="logo" />
+
+            </ButtonBase>
+            <Box flexGrow={1}>{/* whitespace */}</Box>
+          </Box>
+          <Box
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            flexShrink={0}
+            justifyContent="space-between"
+          >
+            <IconButton
+              data-testid="sidebar-menu"
+              onClick={handleLogout}
+              size="large"
+            >
+              <LogoutIcon />
+            </IconButton>
+          </Box>
+        </Toolbar>
+
+      </AppBar>
+      <Sidebar
+        open={menuOpen}
+        onClose={closeSideNav}
+      />
+      <ConfirmationDialogComponent isDialogOpen={openConfirmationDialog}
+        onConfirm={onConfirm}
+        onCancel={() => setOpenConfirmationDialog(false)}
+        text={'Are you sure you want to logout?'}
+      />
+    </>
   )
 }

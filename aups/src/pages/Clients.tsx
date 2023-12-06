@@ -1,6 +1,4 @@
-/* eslint-disable */
 import React, { useEffect, useState } from 'react'
-import { Header } from '../components/Header'
 import { ConfirmationDialogComponent } from '../dialogs/ConfirmationDialog'
 import Paper from '@mui/material/Paper'
 import AppBar from '@mui/material/AppBar'
@@ -21,7 +19,7 @@ import TableFooter from '@mui/material/TableFooter'
 import TablePagination from '@mui/material/TablePagination'
 import { useCloseableSnackbar } from '../hooks/use-closeable-snackbar-hook'
 import { Client } from '../models/Client'
-import { deleteClientById, getAllClient } from '../services/ClientService'
+import { createClient, deleteClientById, getAllClient, updateClient } from '../services/ClientService'
 import { CreateClientDialog } from '../dialogs/CreateClientDialog'
 
 const Clients = () => {
@@ -33,14 +31,19 @@ const Clients = () => {
   const [paginationRows, setPaginationRows] = useState(10)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const [showEditDialog, setShowEditDialog] = useState(false)
 
   const [selectedClient, setSelectedClient] = useState<Client>()
 
   useEffect(() => {
-    getAllClient().then((res:any) => {
+    loadClients()
+  }, [])
+
+  function loadClients () {
+    getAllClient().then((res: any) => {
       setClientsDb(res.data)
     })
-  }, [])
+  }
 
   function handlePaginationChange (event: unknown, newPage: number) {
     setPaginationPage(newPage)
@@ -56,23 +59,41 @@ const Clients = () => {
     setShowDeleteDialog(true)
   }
 
+  function editClient (client: Client) {
+    setSelectedClient(client)
+    setShowEditDialog(true)
+  }
+
   function handleConfirmDelete () {
     setShowDeleteDialog(false)
     deleteClientById(selectedClient?.id || -1).then(() => {
       enqueueSuccessSnackbar('Client successfully deleted')
       setShowDeleteDialog(false)
-	}).catch(() =>
+      loadClients()
+    }).catch(() =>
       enqueueErrorSnackbar('Something went wrong'))
   }
 
-  function handleConfirmCreate () {
-    setShowCreateDialog(false)
-    // TODO add logic for creation
+  function handleConfirmCreate (client: Client) {
+    createClient(client.firstName, client.surname, client.phoneNumber, client.city, client.street, client.number).then(() => {
+      enqueueSuccessSnackbar('Client successfully added')
+      setShowCreateDialog(false)
+      loadClients()
+    }).catch(() =>
+      enqueueErrorSnackbar('Something went wrong'))
+  }
+
+  function handleConfirmEdit (client: Client) {
+    updateClient(client).then(() => {
+      enqueueSuccessSnackbar('Client successfully edited')
+      setShowEditDialog(false)
+      loadClients()
+    }).catch(() =>
+      enqueueErrorSnackbar('Something went wrong'))
   }
 
   return (
         <>
-            <Header/>
             <Paper className={tableClasses.mainTable}>
                 <AppBar position="static" >
                     <Toolbar color="primary">
@@ -87,77 +108,74 @@ const Clients = () => {
                     </Toolbar>
                 </AppBar>
                 <div className={tableClasses.tableWrapper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-							<TableCell>{'First name'}</TableCell>
-							<TableCell>{'Surname'}</TableCell>
-							<TableCell>{'Phone number'}</TableCell>
-                            <TableCell>{'City'}</TableCell>
-                            <TableCell>{'Street'}</TableCell>
-                            <TableCell>{'Street Number'}</TableCell>
-                            <TableCell />
-                            <TableCell />
-							<TableCell />
-							<TableCell />
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {clientsDb.slice(paginationPage * paginationRows, paginationPage * paginationRows + paginationRows).map((client : Client) => (
-                            <TableRow key={client.id} classes={{ root: 'small-row datatableRow' }}>
-                                <TableCell className={tableClasses.tableRow}>{client.firstName}</TableCell>
-                                <TableCell className={tableClasses.tableRow}>{client.surname}</TableCell>
-                                <TableCell className={tableClasses.tableRow}>{client.phoneNumber}</TableCell>
-								<TableCell className={tableClasses.tableRow}>{client.city}</TableCell>
-								<TableCell className={tableClasses.tableRow}>{client.street}</TableCell>
-								<TableCell className={tableClasses.tableRow}>{client.number}</TableCell>
-                                <TableCell className={tableClasses.tableRow}>
-									
-                                    <Tooltip
-                                        color="primary"
-                                        title={'Edit tool'}
-                                        onClick={() => {}}
-                                    >
-                                        <IconButton size={'small'}>
-                                            <EditIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                </TableCell>
-                                <TableCell className={tableClasses.tableRow}>
-                                    <Tooltip
-                                        title={'Delete tool'}
-                                        onClick={() => { deleteClient(client) }}
-                                    >
-                                        <IconButton size={'small'} color="error">
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                </TableCell>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>{'First name'}</TableCell>
+                                <TableCell>{'Surname'}</TableCell>
+                                <TableCell>{'Phone number'}</TableCell>
+                                <TableCell>{'City'}</TableCell>
+                                <TableCell>{'Street'}</TableCell>
+                                <TableCell>{'Street Number'}</TableCell>
+                                <TableCell />
+                                <TableCell />
                             </TableRow>
-                        ))}
-                    </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                rowsPerPageOptions={[5, 10, 15, 100]}
-                                count={clientsDb.length}
-                                rowsPerPage={paginationRows}
-                                colSpan={9}
-                                page={paginationPage}
-                                labelDisplayedRows={({ from, to, count }) => `${from}-${to} of ${count}`}
-                                labelRowsPerPage={'Rows per page'}
-                                onPageChange={handlePaginationChange}
-                                onRowsPerPageChange={handleChangeRowsPerPage}
-                            />
-                        </TableRow>
-                    </TableFooter>
-                </Table>
-            </div>
+                        </TableHead>
+                        <TableBody>
+                            {clientsDb.slice(paginationPage * paginationRows, paginationPage * paginationRows + paginationRows).map((client: Client) => (
+                                <TableRow key={client.id} classes={{ root: 'small-row datatableRow' }}>
+                                    <TableCell className={tableClasses.tableRow}>{client.firstName}</TableCell>
+                                    <TableCell className={tableClasses.tableRow}>{client.surname}</TableCell>
+                                    <TableCell className={tableClasses.tableRow}>{client.phoneNumber}</TableCell>
+                                    <TableCell className={tableClasses.tableRow}>{client.city}</TableCell>
+                                    <TableCell className={tableClasses.tableRow}>{client.street}</TableCell>
+                                    <TableCell className={tableClasses.tableRow}>{client.number}</TableCell>
+                                    <TableCell className={tableClasses.tableRow}>
+                                        <Tooltip
+                                            color="primary"
+                                            title={'Edit client'}
+                                            onClick={() => { editClient(client) }}
+                                        >
+                                            <IconButton size={'small'}>
+                                                <EditIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </TableCell>
+                                    <TableCell className={tableClasses.tableRow}>
+                                        <Tooltip
+                                            title={'Delete client'}
+                                            onClick={() => { deleteClient(client) }}
+                                        >
+                                            <IconButton size={'small'} color="error">
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                        <TableFooter>
+                            <TableRow>
+                                <TablePagination
+                                    rowsPerPageOptions={[5, 10, 15, 100]}
+                                    count={clientsDb.length}
+                                    rowsPerPage={paginationRows}
+                                    colSpan={9}
+                                    page={paginationPage}
+                                    labelDisplayedRows={({ from, to, count }) => `${from}-${to} of ${count}`}
+                                    labelRowsPerPage={'Rows per page'}
+                                    onPageChange={handlePaginationChange}
+                                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                />
+                            </TableRow>
+                        </TableFooter>
+                    </Table>
+                </div>
                 {showDeleteDialog && (
                     <ConfirmationDialogComponent
                         onConfirm={handleConfirmDelete}
                         onCancel={() => setShowDeleteDialog(false)}
-                        text={'Are you sure you want to delete this tool?'}
+                        text={'Are you sure you want to delete this client?'}
                         isDialogOpen={showDeleteDialog}
                     />
                 )}
@@ -165,8 +183,18 @@ const Clients = () => {
                     <CreateClientDialog
                         onConfirm={handleConfirmCreate}
                         onCancel={() => setShowCreateDialog(false)}
-                        text={'New Location'}
+                        text={'New Client'}
                         isDialogOpen={showCreateDialog}
+                    />
+                )}
+
+                {showEditDialog && (
+                    <CreateClientDialog
+                        onConfirm={handleConfirmEdit}
+                        onCancel={() => setShowEditDialog(false)}
+                        text={'Edit Client'}
+                        isDialogOpen={showEditDialog}
+                        selectedClient={selectedClient}
                     />
                 )}
             </Paper>

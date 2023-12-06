@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import React, { useEffect, useState } from 'react'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -11,31 +9,37 @@ import { useStyles } from './dialog.style'
 import { DialogContent, TextField } from '@mui/material'
 import { useForm, Controller } from 'react-hook-form'
 import { Client } from '../models/Client'
-import { createClient } from '../services/ClientService'
 
 export interface CreateClientDialogProps {
   isDialogOpen: boolean;
+  text: string;
   onConfirm: (client: Client) => void;
   onCancel?: () => void;
-  text: string;
+  selectedClient?: Client;
 }
 
 export function CreateClientDialog (props: CreateClientDialogProps) {
   const { classes } = useStyles()
 
-  const [firstName, setFirstName] = useState('')
-  const [surname, setSurname] = useState('')
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [city, setCity] = useState('')
-  const [street, setStreet] = useState('')
-  const [number, setNumber] = useState('')
+  useEffect(() => {
+    console.log(props.selectedClient)
+  }, [props.selectedClient])
+
+  const [firstName, setFirstName] = useState(props.selectedClient?.firstName || '')
+  const [surname, setSurname] = useState(props.selectedClient?.surname || '')
+  const [phoneNumber, setPhoneNumber] = useState(props.selectedClient?.phoneNumber || '')
+  const [city, setCity] = useState(props.selectedClient?.city || '')
+  const [street, setStreet] = useState(props.selectedClient?.street || '')
+  const [number, setNumber] = useState(props.selectedClient?.number || '')
 
   function handleConfirm () {
-    // TODO call props.onConfirm();
-	createClient(firstName, surname, phoneNumber, city, street, number)
-	if (props.onCancel) {
-		props.onCancel()
-	  }
+    const client: Client = { firstName, surname, phoneNumber, city, street, number } as Client
+    console.log(client)
+    if (props.selectedClient) {
+      client.id = props.selectedClient?.id
+    }
+    console.log(client)
+    props.onConfirm(client)
   }
 
   function handleCancel (e: React.MouseEvent, reason: string) {
@@ -52,19 +56,18 @@ export function CreateClientDialog (props: CreateClientDialogProps) {
   const streetWatch = watch('street')
   const numberWatch = watch('number')
 
-  
   useEffect(() => {
     if (firstNameWatch) {
       setFirstName(firstNameWatch)
     }
   }, [firstNameWatch])
-  
+
   useEffect(() => {
     if (surnameWatch) {
       setSurname(surnameWatch)
     }
   }, [surnameWatch])
-  
+
   useEffect(() => {
     if (phoneNumberWatch) {
       setPhoneNumber(phoneNumberWatch)
@@ -97,7 +100,7 @@ export function CreateClientDialog (props: CreateClientDialogProps) {
         </AppBar>
       </DialogTitle>
       <DialogContent>
-	  <Controller
+        <Controller
           name="firstName"
           defaultValue={firstName}
           control={control}
@@ -122,54 +125,54 @@ export function CreateClientDialog (props: CreateClientDialogProps) {
             />
           )}
         /><Controller
-		name="surname"
-		defaultValue={surname}
-		control={control}
-		rules={{
-		  required: {
-			value: true,
-			message: 'Required'
-		  }
-		}}
-		render={({ field }) => (
-		  <TextField
-			{...field}
-			variant="standard"
-			onSubmit={() => { }}
-			autoFocus
-			fullWidth
-			required
-			label={'Surname'}
-			margin="normal"
-			helperText={formState.errors?.surname?.message?.toString() || ''}
-			error={!!formState.errors.surname}
-		  />
-		)}
-	  /><Controller
-	  name="phoneNumber"
-	  defaultValue={phoneNumber}
-	  control={control}
-	  rules={{
-		required: {
-		  value: true,
-		  message: 'Required'
-		}
-	  }}
-	  render={({ field }) => (
-		<TextField
-		  {...field}
-		  variant="standard"
-		  onSubmit={() => { }}
-		  autoFocus
-		  fullWidth
-		  required
-		  label={'PhoneNumber'}
-		  margin="normal"
-		  helperText={formState.errors?.phoneNumber?.message?.toString() || ''}
-		  error={!!formState.errors.phoneNumber}
-		/>
-	  )}
-	/>
+          name="surname"
+          defaultValue={surname}
+          control={control}
+          rules={{
+            required: {
+              value: true,
+              message: 'Required'
+            }
+          }}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              variant="standard"
+              onSubmit={() => { }}
+              autoFocus
+              fullWidth
+              required
+              label={'Surname'}
+              margin="normal"
+              helperText={formState.errors?.surname?.message?.toString() || ''}
+              error={!!formState.errors.surname}
+            />
+          )}
+        /><Controller
+          name="phoneNumber"
+          defaultValue={phoneNumber}
+          control={control}
+          rules={{
+            required: {
+              value: true,
+              message: 'Required'
+            }
+          }}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              variant="standard"
+              onSubmit={() => { }}
+              autoFocus
+              fullWidth
+              required
+              label={'PhoneNumber'}
+              margin="normal"
+              helperText={formState.errors?.phoneNumber?.message?.toString() || ''}
+              error={!!formState.errors.phoneNumber}
+            />
+          )}
+        />
         <Controller
           name="city"
           defaultValue={city}

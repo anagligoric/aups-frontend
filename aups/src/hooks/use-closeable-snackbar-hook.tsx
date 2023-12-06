@@ -34,9 +34,9 @@ export function useCloseableSnackbar () {
   }
   return {
     enqueueSnackbar: enqueueCloseableSnackbar,
-    enqueueSuccessSnackbar: (message: string) => enqueueCloseableSnackbar(message, { variant: 'success' }),
-    enqueueErrorSnackbar: (message: string) => enqueueCloseableSnackbar(message, { variant: 'error' }),
-    enqueueWarningSnackbar: (message: string) => enqueueCloseableSnackbar(message, { variant: 'warning' }),
+    enqueueSuccessSnackbar: (message: string) => enqueueCloseableSnackbar(message, { variant: 'success', anchorOrigin: { vertical: 'top', horizontal: 'right' } }),
+    enqueueErrorSnackbar: (message: string) => enqueueCloseableSnackbar(message, { variant: 'error', anchorOrigin: { vertical: 'top', horizontal: 'right' } }),
+    enqueueWarningSnackbar: (message: string) => enqueueCloseableSnackbar(message, { variant: 'warning', anchorOrigin: { vertical: 'top', horizontal: 'right' } }),
     closeSnackbar
   }
 }

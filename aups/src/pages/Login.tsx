@@ -9,9 +9,11 @@ import InputAdornment from '@mui/material/InputAdornment'
 import { IconButton } from '@mui/material'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+import useStyles from './Login.style'
 
 export const Login = () => {
   const nav = useNavigate()
+  const { classes } = useStyles()
   const { watch, control, formState } = useForm({ mode: 'onChange' })
 
   const [showPassword, setShowPassword] = useState(false)
@@ -47,8 +49,8 @@ export const Login = () => {
 
   return (<div >
     <form className="loginForm">
-      <div className="imgcontainer">
-        <img src="avatar.png" alt="Avatar" className="avatar" />
+      <div className={classes.imgContainer}>
+        <img src="avatar.png" alt="Avatar" className={classes.avatar} />
       </div>
       <div className="container">
         <Controller
