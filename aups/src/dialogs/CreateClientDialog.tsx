@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { useEffect, useState } from 'react'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -8,24 +10,32 @@ import Button from '@mui/material//Button'
 import { useStyles } from './dialog.style'
 import { DialogContent, TextField } from '@mui/material'
 import { useForm, Controller } from 'react-hook-form'
-import { Location } from '../models/Location'
+import { Client } from '../models/Client'
+import { createClient } from '../services/ClientService'
 
-export interface CreateLocationDialogProps {
+export interface CreateClientDialogProps {
   isDialogOpen: boolean;
-  onConfirm: (location: Location) => void;
+  onConfirm: (client: Client) => void;
   onCancel?: () => void;
   text: string;
 }
 
-export function CreateLocationDialog (props: CreateLocationDialogProps) {
+export function CreateClientDialog (props: CreateClientDialogProps) {
   const { classes } = useStyles()
 
+  const [firstName, setFirstName] = useState('')
+  const [surname, setSurname] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('')
   const [city, setCity] = useState('')
   const [street, setStreet] = useState('')
   const [number, setNumber] = useState('')
 
   function handleConfirm () {
     // TODO call props.onConfirm();
+	createClient(firstName, surname, phoneNumber, city, street, number)
+	if (props.onCancel) {
+		props.onCancel()
+	  }
   }
 
   function handleCancel (e: React.MouseEvent, reason: string) {
@@ -35,9 +45,31 @@ export function CreateLocationDialog (props: CreateLocationDialogProps) {
   }
 
   const { watch, control, formState } = useForm({ mode: 'onChange' })
+  const firstNameWatch = watch('firstName')
+  const surnameWatch = watch('surname')
+  const phoneNumberWatch = watch('phoneNumber')
   const cityWatch = watch('city')
   const streetWatch = watch('street')
   const numberWatch = watch('number')
+
+  
+  useEffect(() => {
+    if (firstNameWatch) {
+      setFirstName(firstNameWatch)
+    }
+  }, [firstNameWatch])
+  
+  useEffect(() => {
+    if (surnameWatch) {
+      setSurname(surnameWatch)
+    }
+  }, [surnameWatch])
+  
+  useEffect(() => {
+    if (phoneNumberWatch) {
+      setPhoneNumber(phoneNumberWatch)
+    }
+  }, [phoneNumberWatch])
 
   useEffect(() => {
     if (cityWatch) {
@@ -65,6 +97,79 @@ export function CreateLocationDialog (props: CreateLocationDialogProps) {
         </AppBar>
       </DialogTitle>
       <DialogContent>
+	  <Controller
+          name="firstName"
+          defaultValue={firstName}
+          control={control}
+          rules={{
+            required: {
+              value: true,
+              message: 'Required'
+            }
+          }}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              variant="standard"
+              onSubmit={() => { }}
+              autoFocus
+              fullWidth
+              required
+              label={'FirstName'}
+              margin="normal"
+              helperText={formState.errors?.firstName?.message?.toString() || ''}
+              error={!!formState.errors.firstName}
+            />
+          )}
+        /><Controller
+		name="surname"
+		defaultValue={surname}
+		control={control}
+		rules={{
+		  required: {
+			value: true,
+			message: 'Required'
+		  }
+		}}
+		render={({ field }) => (
+		  <TextField
+			{...field}
+			variant="standard"
+			onSubmit={() => { }}
+			autoFocus
+			fullWidth
+			required
+			label={'Surname'}
+			margin="normal"
+			helperText={formState.errors?.surname?.message?.toString() || ''}
+			error={!!formState.errors.surname}
+		  />
+		)}
+	  /><Controller
+	  name="phoneNumber"
+	  defaultValue={phoneNumber}
+	  control={control}
+	  rules={{
+		required: {
+		  value: true,
+		  message: 'Required'
+		}
+	  }}
+	  render={({ field }) => (
+		<TextField
+		  {...field}
+		  variant="standard"
+		  onSubmit={() => { }}
+		  autoFocus
+		  fullWidth
+		  required
+		  label={'PhoneNumber'}
+		  margin="normal"
+		  helperText={formState.errors?.phoneNumber?.message?.toString() || ''}
+		  error={!!formState.errors.phoneNumber}
+		/>
+	  )}
+	/>
         <Controller
           name="city"
           defaultValue={city}

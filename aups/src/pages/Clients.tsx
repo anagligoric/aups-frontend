@@ -1,4 +1,4 @@
-
+/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import { Header } from '../components/Header'
 import { ConfirmationDialogComponent } from '../dialogs/ConfirmationDialog'
@@ -20,25 +20,25 @@ import EditIcon from '@mui/icons-material/Edit'
 import TableFooter from '@mui/material/TableFooter'
 import TablePagination from '@mui/material/TablePagination'
 import { useCloseableSnackbar } from '../hooks/use-closeable-snackbar-hook'
-import { Location } from '../models/Location'
-import { deleteLocationById, getAllLocation } from '../services/LocationService'
-import { CreateLocationDialog } from '../dialogs/CreateLocationDialog'
+import { Client } from '../models/Client'
+import { deleteClientById, getAllClient } from '../services/ClientService'
+import { CreateClientDialog } from '../dialogs/CreateClientDialog'
 
-const Locations = () => {
+const Clients = () => {
   const { classes: tableClasses } = useTableStyles()
   const { enqueueErrorSnackbar, enqueueSuccessSnackbar } = useCloseableSnackbar()
 
-  const [locationsDb, setLocationsDb] = useState<Location[]>([])
+  const [clientsDb, setClientsDb] = useState<Client[]>([])
   const [paginationPage, setPaginationPage] = useState(0)
   const [paginationRows, setPaginationRows] = useState(10)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [showCreateDialog, setShowCreateDialog] = useState(false)
 
-  const [selectedLocation, setSelectedLocation] = useState<Location>()
+  const [selectedClient, setSelectedClient] = useState<Client>()
 
   useEffect(() => {
-    getAllLocation().then((res:any) => {
-      setLocationsDb(res.data)
+    getAllClient().then((res:any) => {
+      setClientsDb(res.data)
     })
   }, [])
 
@@ -51,17 +51,17 @@ const Locations = () => {
     setPaginationPage(0)
   }
 
-  function deleteLocation (location: Location) {
-    setSelectedLocation(location)
+  function deleteClient (client: Client) {
+    setSelectedClient(client)
     setShowDeleteDialog(true)
   }
 
   function handleConfirmDelete () {
     setShowDeleteDialog(false)
-    deleteLocationById(selectedLocation?.id || -1).then(() => {
-      enqueueSuccessSnackbar('Location successfully deleted')
+    deleteClientById(selectedClient?.id || -1).then(() => {
+      enqueueSuccessSnackbar('Client successfully deleted')
       setShowDeleteDialog(false)
-    }).catch(() =>
+	}).catch(() =>
       enqueueErrorSnackbar('Something went wrong'))
   }
 
@@ -76,9 +76,9 @@ const Locations = () => {
             <Paper className={tableClasses.mainTable}>
                 <AppBar position="static" >
                     <Toolbar color="primary">
-                        <Typography variant="h6">{'Locations'}</Typography>
+                        <Typography variant="h6">{'Clients'}</Typography>
                         <div className={tableClasses.header}>
-                            <Tooltip title={'Add location'} onClick={() => { setShowCreateDialog(true) }}>
+                            <Tooltip title={'Add client'} onClick={() => { setShowCreateDialog(true) }}>
                                 <IconButton className={tableClasses.active} size="large">
                                     <AddIcon />
                                 </IconButton>
@@ -90,20 +90,29 @@ const Locations = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
+							<TableCell>{'First name'}</TableCell>
+							<TableCell>{'Surname'}</TableCell>
+							<TableCell>{'Phone number'}</TableCell>
                             <TableCell>{'City'}</TableCell>
                             <TableCell>{'Street'}</TableCell>
-                            <TableCell>{'Number'}</TableCell>
+                            <TableCell>{'Street Number'}</TableCell>
                             <TableCell />
                             <TableCell />
+							<TableCell />
+							<TableCell />
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {locationsDb.slice(paginationPage * paginationRows, paginationPage * paginationRows + paginationRows).map((location: Location) => (
-                            <TableRow key={location.id} classes={{ root: 'small-row datatableRow' }}>
-                                <TableCell className={tableClasses.tableRow}>{location.city}</TableCell>
-                                <TableCell className={tableClasses.tableRow}>{location.street}</TableCell>
-                                <TableCell className={tableClasses.tableRow}>{location.number}</TableCell>
+                        {clientsDb.slice(paginationPage * paginationRows, paginationPage * paginationRows + paginationRows).map((client : Client) => (
+                            <TableRow key={client.id} classes={{ root: 'small-row datatableRow' }}>
+                                <TableCell className={tableClasses.tableRow}>{client.firstName}</TableCell>
+                                <TableCell className={tableClasses.tableRow}>{client.surname}</TableCell>
+                                <TableCell className={tableClasses.tableRow}>{client.phoneNumber}</TableCell>
+								<TableCell className={tableClasses.tableRow}>{client.city}</TableCell>
+								<TableCell className={tableClasses.tableRow}>{client.street}</TableCell>
+								<TableCell className={tableClasses.tableRow}>{client.number}</TableCell>
                                 <TableCell className={tableClasses.tableRow}>
+									
                                     <Tooltip
                                         color="primary"
                                         title={'Edit tool'}
@@ -117,7 +126,7 @@ const Locations = () => {
                                 <TableCell className={tableClasses.tableRow}>
                                     <Tooltip
                                         title={'Delete tool'}
-                                        onClick={() => { deleteLocation(location) }}
+                                        onClick={() => { deleteClient(client) }}
                                     >
                                         <IconButton size={'small'} color="error">
                                             <DeleteIcon />
@@ -131,7 +140,7 @@ const Locations = () => {
                         <TableRow>
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 15, 100]}
-                                count={locationsDb.length}
+                                count={clientsDb.length}
                                 rowsPerPage={paginationRows}
                                 colSpan={9}
                                 page={paginationPage}
@@ -153,7 +162,7 @@ const Locations = () => {
                     />
                 )}
                 {showCreateDialog && (
-                    <CreateLocationDialog
+                    <CreateClientDialog
                         onConfirm={handleConfirmCreate}
                         onCancel={() => setShowCreateDialog(false)}
                         text={'New Location'}
@@ -165,4 +174,4 @@ const Locations = () => {
         </>
   )
 }
-export default Locations
+export default Clients

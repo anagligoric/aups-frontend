@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
@@ -13,8 +14,8 @@ import { Login } from './pages/Login'
 import { Register } from './pages/Register'
 import { SnackbarProvider } from 'notistack'
 import { getToken } from './services/AuthService'
-import Locations from './pages/Locations'
 import { LightMuiButton } from './models/MuiButton'
+import Clients from './pages/Clients'
 
 function App () {
   const [token, setToken] = useState(getToken())
@@ -59,7 +60,8 @@ function App () {
               <Route path="/tools" element={<Tools /> } />
               <Route path="/login" element={<Login/>} />
               <Route path="/register" element={<Register/>} />
-              <Route path="/locations" element={<Locations/>} />
+			  <Route path="/clients" element={<Clients/>} />
+
             </Routes>
         </ThemeProvider>
       </SnackbarProvider>
