@@ -28,7 +28,6 @@ const useStyles = makeStyles()(() => {
     logoImage: {
       height: '50px',
       marginTop: '5px'
-
     }
   }
 })

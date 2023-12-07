@@ -10,11 +10,13 @@ import { IconButton } from '@mui/material'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import useStyles from './Login.style'
+import { useCloseableSnackbar } from '../hooks/use-closeable-snackbar-hook'
 
 export const Login = () => {
   const nav = useNavigate()
   const { classes } = useStyles()
   const { watch, control, formState } = useForm({ mode: 'onChange' })
+  const { enqueueErrorSnackbar } = useCloseableSnackbar()
 
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
@@ -40,6 +42,13 @@ export const Login = () => {
     login(email, password)
       .then(() => {
         nav('/')
+      })
+      .catch((error) => {
+        if (error.response.data) {
+          enqueueErrorSnackbar(error.response.data)
+        } else {
+          enqueueErrorSnackbar('Something went wrong')
+        }
       })
   }
 
@@ -126,9 +135,6 @@ export const Login = () => {
           onClick={handleSubmit}
           variant="text"
           autoFocus
-          style={{
-            marginTop: '5px'
-          }}
         >
           {'Login'}
         </Button>

@@ -4,7 +4,8 @@ import { blue, grey, green } from '@mui/material/colors'
 import { Property } from 'csstype'
 
 const useTableStyles = makeStyles()(() => ({
-  mainTable: { margin: Spacing[10] },
+  mainTable: { margin: Spacing[10], marginTop: 100 },
+  container: { marginTop: Spacing[100] },
   tableWrapper: { overflowX: 'auto' },
   head: {
     paddingTop: Spacing[5],

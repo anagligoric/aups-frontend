@@ -11,16 +11,18 @@ import Home from './pages/Home'
 import { Login } from './pages/Login'
 import { Register } from './pages/Register'
 import { SnackbarProvider } from 'notistack'
-import { getToken } from './services/AuthService'
+import { getRole, getToken } from './services/AuthService'
 import { LightMuiButton } from './models/MuiButton'
 import Clients from './pages/Clients'
 import { Header } from './components/Header'
-import useStyles from './pages/Header.style'
+import useStyles from './pages/Additional.style'
+import AdditionalPage from './pages/Additional'
 import Vehicles from './pages/Vechicles'
 
 function App () {
   const { classes } = useStyles()
   const [token, setToken] = useState(getToken())
+  const [isAdmin, setIsAdmin] = useState(getRole() === 'ROLE_ADMIN')
 
   const theme = createTheme({
     palette: {
@@ -54,6 +56,7 @@ function App () {
   useEffect(() => {
     const handleStorageChange = () => {
       setToken(getToken())
+      setIsAdmin(getRole() === 'ROLE_ADMIN')
     }
 
     window.addEventListener('storage', handleStorageChange)
@@ -63,18 +66,24 @@ function App () {
     }
   }, [])
 
+  function renderForbiddenPage () {
+    return <AdditionalPage title='403 - Forbidden'
+                    message='You are not allowed to see this page.'
+            />
+  }
+
   return (
     <SnackbarProvider>
       <ThemeProvider theme={theme}>
         {token && <div className={classes.appHeader}>{<Header />}</div>}
         <Routes>
           <Route path="/" element={token ? (<Home />) : <Login />} />
-          <Route path="/tools" element={<Tools />} />
+          <Route path="/tools" element={isAdmin ? <Tools /> : renderForbiddenPage()} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/clients" element={<Clients />} />
-		  <Route path="/vehicles" element={<Vehicles />} />
-
+          <Route path="/clients" element={isAdmin ? <Clients /> : renderForbiddenPage()} />
+		      <Route path="/vehicles" element={<Vehicles />} />
+          <Route path='*' element={<AdditionalPage title='404 - Not Found' message='The page you are looking for might have been removed or is temporarily unavailable.' />} />
         </Routes>
       </ThemeProvider>
     </SnackbarProvider>

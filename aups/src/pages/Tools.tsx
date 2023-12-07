@@ -32,7 +32,7 @@ const Tools = () => {
   const [selectedTool, setSelectedTool] = useState<Tool>()
 
   useEffect(() => {
-    getAllTools().then((res:any) => {
+    getAllTools().then((res: any) => {
       setToolsDb(res.data)
     })
   }, [])
@@ -61,27 +61,26 @@ const Tools = () => {
   }
 
   return (
-        <>
-            <Paper className={tableClasses.mainTable}>
-                <AppBar position="static">
-                    <Toolbar color="primary">
-                        <Typography variant="h6">{'Tools'}</Typography>
-                        <div className={tableClasses.header}>
-                            <Tooltip title={'Add tool'} onClick={() => {}}>
-                                <IconButton className={tableClasses.active} size="large">
-                                    <AddIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </div>
-                    </Toolbar>
-                </AppBar>
-                <div className={tableClasses.tableWrapper}>
+        <Paper className={tableClasses.mainTable}>
+            <AppBar position="static">
+                <Toolbar color="primary">
+                    <Typography variant="h6">{'Tools'}</Typography>
+                    <div className={tableClasses.header}>
+                        <Tooltip title={'Add tool'} onClick={() => { }}>
+                            <IconButton className={tableClasses.active} size="large">
+                                <AddIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </div>
+                </Toolbar>
+            </AppBar>
+            <div className={tableClasses.tableWrapper}>
                 <Table>
                     <TableHead>
                         <TableRow>
                             <TableCell>{'Name'}</TableCell>
-                            <TableCell/>
-                            <TableCell/>
+                            <TableCell />
+                            <TableCell />
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -92,7 +91,7 @@ const Tools = () => {
                                     <Tooltip
                                         color="primary"
                                         title={'Edit tool'}
-                                        onClick={() => {}}
+                                        onClick={() => { }}
                                     >
                                         <IconButton size={'small'}>
                                             <EditIcon />
@@ -129,17 +128,15 @@ const Tools = () => {
                     </TableFooter>
                 </Table>
             </div>
-                {showDeleteDialog && (
-                    <ConfirmationDialogComponent
-                        onConfirm={handleConfirm}
-                        onCancel={() => setShowDeleteDialog(false)}
-                        text={'Are you sure you want to delete this tool?'}
-                        isDialogOpen={showDeleteDialog}
-                    />
-                )}
-            </Paper>
-
-        </>
+            {showDeleteDialog && (
+                <ConfirmationDialogComponent
+                    onConfirm={handleConfirm}
+                    onCancel={() => setShowDeleteDialog(false)}
+                    text={'Are you sure you want to delete this tool?'}
+                    isDialogOpen={showDeleteDialog}
+                />
+            )}
+        </Paper>
   )
 }
 export default Tools
