@@ -1,6 +1,6 @@
 import { Document } from './Document'
 
-export interface Vechicle {
+export interface Vehicle {
     id: number
     name: string
     licencePlate: string

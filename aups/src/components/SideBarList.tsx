@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
@@ -11,6 +12,8 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import { SidebarListItem } from './SideBarListItem'
 import useStyles from './SideBar.style'
 import { getRole } from '../services/AuthService'
+import { ListItemIcon, SvgIcon } from '@mui/material'
+import DirectionsCar from '@mui/icons-material/DirectionsCar'
 
 export interface SidebarListProps {
     onClose: () => void;
@@ -70,6 +73,15 @@ export function SidebarList (props: SidebarListProps) {
                         name="Tools"
                     >
                         <SettingsIcon />
+                    </SidebarListItem>
+                )}
+				 {isAdmin && (
+                    <SidebarListItem
+                        closeSidebar={handleClose}
+                        url={'/vehicles'}
+                        name="Vehicles"
+                    >
+                        <DirectionsCar />
                     </SidebarListItem>
                 )}
             </List>

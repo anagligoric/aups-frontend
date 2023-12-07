@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
@@ -15,6 +16,7 @@ import { LightMuiButton } from './models/MuiButton'
 import Clients from './pages/Clients'
 import { Header } from './components/Header'
 import useStyles from './pages/Header.style'
+import Vehicles from './pages/Vechicles'
 
 function App () {
   const { classes } = useStyles()
@@ -71,6 +73,8 @@ function App () {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/clients" element={<Clients />} />
+		  <Route path="/vehicles" element={<Vehicles />} />
+
         </Routes>
       </ThemeProvider>
     </SnackbarProvider>

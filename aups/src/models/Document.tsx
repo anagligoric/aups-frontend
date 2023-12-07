@@ -1,6 +1,6 @@
 import { Job } from './Job'
 import { JobPlan } from './JobPlan'
-import { Vechicle } from './Vehicle'
+import { Vehicle } from './Vehicle'
 import { DocumentSparePart } from './DocumentSparePart'
 import { DocumentTool } from './DocumentTool'
 
@@ -11,7 +11,7 @@ export interface Document {
     price : number
     job: Job
     jobPlan: JobPlan
-    vehicles: Vechicle[]
+    vehicles: Vehicle[]
     documentSpareParts: DocumentSparePart[]
     documentTools: DocumentTool[]
 }
