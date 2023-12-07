@@ -9,7 +9,6 @@ import { createTheme } from '@mui/material/styles'
 import Tools from './pages/Tools'
 import Home from './pages/Home'
 import { Login } from './pages/Login'
-import { Register } from './pages/Register'
 import { SnackbarProvider } from 'notistack'
 import { getRole, getToken } from './services/AuthService'
 import { LightMuiButton } from './models/MuiButton'
@@ -18,6 +17,7 @@ import { Header } from './components/Header'
 import useStyles from './pages/Additional.style'
 import AdditionalPage from './pages/Additional'
 import Vehicles from './pages/Vechicles'
+import Users from './pages/Users'
 
 function App () {
   const { classes } = useStyles()
@@ -80,8 +80,8 @@ function App () {
           <Route path="/" element={token ? (<Home />) : <Login />} />
           <Route path="/tools" element={isAdmin ? <Tools /> : renderForbiddenPage()} />
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
           <Route path="/clients" element={isAdmin ? <Clients /> : renderForbiddenPage()} />
+		  <Route path="/users" element={isAdmin ? <Users /> : renderForbiddenPage()} />
 		      <Route path="/vehicles" element={<Vehicles />} />
           <Route path='*' element={<AdditionalPage title='404 - Not Found' message='The page you are looking for might have been removed or is temporarily unavailable.' />} />
         </Routes>

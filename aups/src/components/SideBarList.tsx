@@ -14,6 +14,8 @@ import useStyles from './SideBar.style'
 import { getRole } from '../services/AuthService'
 import { ListItemIcon, SvgIcon } from '@mui/material'
 import DirectionsCar from '@mui/icons-material/DirectionsCar'
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PersonAdd from '@mui/icons-material/PersonAdd'
 
 export interface SidebarListProps {
     onClose: () => void;
@@ -82,6 +84,15 @@ export function SidebarList (props: SidebarListProps) {
                         name="Vehicles"
                     >
                         <DirectionsCar />
+                    </SidebarListItem>
+                )}
+					 {isAdmin && (
+                    <SidebarListItem
+                        closeSidebar={handleClose}
+                        url={'/users'}
+                        name="Users"
+                    >
+                        <PersonAdd />
                     </SidebarListItem>
                 )}
             </List>
