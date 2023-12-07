@@ -1,7 +1,6 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react'
-import { Tool } from '../models/Tool'
 import { ConfirmationDialogComponent } from '../dialogs/ConfirmationDialog'
-import { getAllTools, deleteToolById } from '../services/ToolService'
 import Paper from '@mui/material/Paper'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
@@ -20,6 +19,9 @@ import EditIcon from '@mui/icons-material/Edit'
 import TableFooter from '@mui/material/TableFooter'
 import TablePagination from '@mui/material/TablePagination'
 import { useCloseableSnackbar } from '../hooks/use-closeable-snackbar-hook'
+import { Tool } from '../models/Tool'
+import { createTool, deleteToolById, getAllTools, updateTool } from '../services/ToolService'
+import { CreateToolDialog } from '../dialogs/CreateToolDialog'
 
 const Tools = () => {
   const { classes: tableClasses } = useTableStyles()
@@ -29,13 +31,20 @@ const Tools = () => {
   const [paginationPage, setPaginationPage] = useState(0)
   const [paginationRows, setPaginationRows] = useState(10)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const [showEditDialog, setShowEditDialog] = useState(false)
+
   const [selectedTool, setSelectedTool] = useState<Tool>()
 
   useEffect(() => {
+    loadTools()
+  }, [])
+
+  function loadTools () {
     getAllTools().then((res: any) => {
       setToolsDb(res.data)
     })
-  }, [])
+  }
 
   function handlePaginationChange (event: unknown, newPage: number) {
     setPaginationPage(newPage)
@@ -51,22 +60,46 @@ const Tools = () => {
     setShowDeleteDialog(true)
   }
 
-  function handleConfirm () {
+  function editTool (tool: Tool) {
+    setSelectedTool(tool)
+    setShowEditDialog(true)
+  }
+
+  function handleConfirmDelete () {
     setShowDeleteDialog(false)
     deleteToolById(selectedTool?.id || -1).then(() => {
       enqueueSuccessSnackbar('Tool successfully deleted')
       setShowDeleteDialog(false)
+      loadTools()
+    }).catch(() =>
+      enqueueErrorSnackbar('Something went wrong'))
+  }
+
+  function handleConfirmCreate (tool: Tool) {
+    createTool(tool.name).then(() => {
+      enqueueSuccessSnackbar('Tool successfully added')
+      setShowCreateDialog(false)
+      loadTools()
+    }).catch(() =>
+      enqueueErrorSnackbar('Something went wrong'))
+  }
+
+  function handleConfirmEdit (tool: Tool) {
+    updateTool(tool).then((tool) => {
+      enqueueSuccessSnackbar('Tool successfully edited')
+      setShowEditDialog(false)
+      loadTools()
     }).catch(() =>
       enqueueErrorSnackbar('Something went wrong'))
   }
 
   return (
         <Paper className={tableClasses.mainTable}>
-            <AppBar position="static">
+            <AppBar position="static" >
                 <Toolbar color="primary">
                     <Typography variant="h6">{'Tools'}</Typography>
                     <div className={tableClasses.header}>
-                        <Tooltip title={'Add tool'} onClick={() => { }}>
+                        <Tooltip title={'Add Tool'} onClick={() => { setShowCreateDialog(true) }}>
                             <IconButton className={tableClasses.active} size="large">
                                 <AddIcon />
                             </IconButton>
@@ -91,7 +124,7 @@ const Tools = () => {
                                     <Tooltip
                                         color="primary"
                                         title={'Edit tool'}
-                                        onClick={() => { }}
+                                        onClick={() => { editTool(tool) }}
                                     >
                                         <IconButton size={'small'}>
                                             <EditIcon />
@@ -130,10 +163,28 @@ const Tools = () => {
             </div>
             {showDeleteDialog && (
                 <ConfirmationDialogComponent
-                    onConfirm={handleConfirm}
+                    onConfirm={handleConfirmDelete}
                     onCancel={() => setShowDeleteDialog(false)}
                     text={'Are you sure you want to delete this tool?'}
                     isDialogOpen={showDeleteDialog}
+                />
+            )}
+            {showCreateDialog && (
+                <CreateToolDialog
+                    onConfirm={handleConfirmCreate}
+                    onCancel={() => setShowCreateDialog(false)}
+                    text={'New Tool'}
+                    isDialogOpen={showCreateDialog}
+                />
+            )}
+
+            {showEditDialog && (
+                <CreateToolDialog
+                    onConfirm={handleConfirmEdit}
+                    onCancel={() => setShowEditDialog(false)}
+                    text={'Edit Tool'}
+                    isDialogOpen={showEditDialog}
+                    selectedTool={selectedTool}
                 />
             )}
         </Paper>
