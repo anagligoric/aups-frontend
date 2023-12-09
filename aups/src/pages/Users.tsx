@@ -102,7 +102,6 @@ const Users = () => {
 
     function handleConfirmEdit(user: UserDto, id?: number) {
         if (id) {
-            resetPassword(id)
             updateUser(id, user).then(() => {
                 enqueueSuccessSnackbar('User successfully edited')
                 setShowEditDialog(false)
