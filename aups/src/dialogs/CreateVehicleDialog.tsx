@@ -27,9 +27,7 @@ export function CreateVehicleDialog (props: CreateVehicleDialogProps) {
   const [type, setType] = useState(props.selectedVehicle?.type || '')
 
   function handleConfirm () {
-	console.log(name)
-	console.log(licencePlate)
-	console.log(type)
+
     const vehicle: Vehicle = { name: name, licencePlate: licencePlate, type:  type } as Vehicle
     if (props.selectedVehicle) {
 		vehicle.id = props.selectedVehicle?.id

@@ -1,37 +1,40 @@
-/* eslint-disable */
-
 import React, { useEffect, useState } from 'react'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import DialogActions from '@mui/material/DialogActions'
-import Button from '@mui/material//Button'
+import Button from '@mui/material/Button'
 import { useStyles } from './dialog.style'
-import { DialogContent, TextField } from '@mui/material'
+import { DialogContent, FormControl, MenuItem, Select, TextField } from '@mui/material'
 import { useForm, Controller } from 'react-hook-form'
-import { User } from '../models/User'
+import { User, UserDto } from '../models/User'
+import { mapRoleName } from '../services/UserService'
+import { Role } from '../models/Role'
 
 export interface CreateUserDialogProps {
   isDialogOpen: boolean;
   text: string;
-  onConfirm: (user: User) => void;
+  onConfirm: (user: UserDto, id?: number) => void;
+  availableRoles: Role[]
   onCancel?: () => void;
   selectedUser?: User;
 }
 
 export function CreateUserDialog (props: CreateUserDialogProps) {
   const { classes } = useStyles()
+  const { watch, control, formState } = useForm({ mode: 'onChange' })
 
   const [firstName, setFirstName] = useState(props.selectedUser?.firstName || '')
   const [surname, setSurname] = useState(props.selectedUser?.surname || '')
   const [email, setPhoneNumber] = useState(props.selectedUser?.email || '')
-  const [role, setRole] = useState(props.selectedUser?.role || '')
+  const [role, setRole] = useState(props.selectedUser?.role || props.availableRoles[0])
 
   function handleConfirm () {
-    const user: User = { firstName, surname, email, role } as unknown as User
+    const user: UserDto = { firstName, surname, email, roleId: role?.id } as UserDto
     if (props.selectedUser) {
-      user.id = props.selectedUser?.id
+      props.onConfirm(user, props.selectedUser.id)
+      return
     }
     props.onConfirm(user)
   }
@@ -42,7 +45,6 @@ export function CreateUserDialog (props: CreateUserDialogProps) {
     }
   }
 
-  const { watch, control, formState } = useForm({ mode: 'onChange' })
   const firstNameWatch = watch('firstName')
   const surnameWatch = watch('surname')
   const emailWatch = watch('email')
@@ -68,7 +70,7 @@ export function CreateUserDialog (props: CreateUserDialogProps) {
 
   useEffect(() => {
     if (roleWatch) {
-      setRole(roleWatch)
+      setRole(props.availableRoles.find(role => role.id === roleWatch) || role)
     }
   }, [roleWatch])
 
@@ -142,7 +144,6 @@ export function CreateUserDialog (props: CreateUserDialogProps) {
             <TextField
               {...field}
               variant="standard"
-              onSubmit={() => { }}
               autoFocus
               fullWidth
               required
@@ -153,31 +154,28 @@ export function CreateUserDialog (props: CreateUserDialogProps) {
             />
           )}
         />
-        <Controller
-          name="city"
-          defaultValue={role}
-          control={control}
-          rules={{
-            required: {
-              value: true,
-              message: 'Required'
-            }
-          }}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              variant="standard"
-              onSubmit={() => { }}
-              autoFocus
-              fullWidth
-              required
-              label={'Role'}
-              margin="normal"
-              helperText={formState.errors?.role?.message?.toString() || ''}
-              error={!!formState.errors.role}
-            />
-          )}
-        />
+        <FormControl fullWidth>
+          <Controller
+            name={'role'}
+            control={control}
+            defaultValue={role.id}
+            render={({ field }) => (
+              <Select
+                variant='standard'
+                {...field}
+                required
+                label={'Role'}
+              >
+                {props.availableRoles.map((option, index) => (
+                  <MenuItem key={index} value={option.id}>
+                    {mapRoleName(option.name)}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+          />
+        </FormControl>
+
       </DialogContent>
       <DialogActions className={classes.dialogActions}>
         <Button

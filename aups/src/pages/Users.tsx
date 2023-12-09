@@ -20,81 +20,100 @@ import EditIcon from '@mui/icons-material/Edit'
 import TableFooter from '@mui/material/TableFooter'
 import TablePagination from '@mui/material/TablePagination'
 import { useCloseableSnackbar } from '../hooks/use-closeable-snackbar-hook'
-import { User } from '../models/User'
-import { createUser, deleteUserById, getAllUser, updateUser } from '../services/UserService'
+import { User, UserDto } from '../models/User'
+import { createUser, deleteUserById, getAllRoles, getAllUser, mapRoleName, resetPassword, updateUser } from '../services/UserService'
 import { CreateUserDialog } from '../dialogs/CreateUserDialog'
+import { Role } from '../models/Role'
 
 const Users = () => {
-  const { classes: tableClasses } = useTableStyles()
-  const { enqueueErrorSnackbar, enqueueSuccessSnackbar } = useCloseableSnackbar()
+    const { classes: tableClasses } = useTableStyles()
+    const { enqueueErrorSnackbar, enqueueSuccessSnackbar } = useCloseableSnackbar()
 
-  const [usersDb, setUserDb] = useState<User[]>([])
-  const [paginationPage, setPaginationPage] = useState(0)
-  const [paginationRows, setPaginationRows] = useState(10)
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  const [showCreateDialog, setShowCreateDialog] = useState(false)
-  const [showEditDialog, setShowEditDialog] = useState(false)
+    const [usersDb, setUserDb] = useState<User[]>([])
+    const [paginationPage, setPaginationPage] = useState(0)
+    const [paginationRows, setPaginationRows] = useState(10)
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+    const [showCreateDialog, setShowCreateDialog] = useState(false)
+    const [showEditDialog, setShowEditDialog] = useState(false)
+    const [availableRoles, setAvailableRoles] = useState<Role[]>([])
 
-  const [selectedUser, setSelectedUser] = useState<User>()
+    const [selectedUser, setSelectedUser] = useState<User>()
 
-  useEffect(() => {
-    loadUsers()
-  }, [])
+    useEffect(() => {
+        loadUsers()
+    }, [])
 
-  function loadUsers () {
-    getAllUser().then((res: any) => {
-      setUserDb(res.data)
-    })
-  }
+    useEffect(() => {
+        getAllRoles().then((response) => {
+            setAvailableRoles(response.data)
+        })
+            .catch((error) => {
+                if (error.response.data) {
+                    enqueueErrorSnackbar(error.response.data)
+                } else {
+                    enqueueErrorSnackbar('Something went wrong')
+                }
+            })
+    }, [])
 
-  function handlePaginationChange (event: unknown, newPage: number) {
-    setPaginationPage(newPage)
-  }
+    function loadUsers() {
+        getAllUser().then((res: any) => {
+            setUserDb(res.data)
+        })
+    }
 
-  function handleChangeRowsPerPage (event: React.ChangeEvent<HTMLInputElement>) {
-    setPaginationRows(+event.target.value)
-    setPaginationPage(0)
-  }
+    function handlePaginationChange(event: unknown, newPage: number) {
+        setPaginationPage(newPage)
+    }
 
-  function deleteUser (vehicle: User) {
-    setSelectedUser(vehicle)
-    setShowDeleteDialog(true)
-  }
+    function handleChangeRowsPerPage(event: React.ChangeEvent<HTMLInputElement>) {
+        setPaginationRows(+event.target.value)
+        setPaginationPage(0)
+    }
 
-  function editUser (vehicle: User) {
-    setSelectedUser(vehicle)
-    setShowEditDialog(true)
-  }
+    function deleteUser(vehicle: User) {
+        setSelectedUser(vehicle)
+        setShowDeleteDialog(true)
+    }
 
-  function handleConfirmDelete () {
-    setShowDeleteDialog(false)
-    deleteUserById(selectedUser?.id || -1).then(() => {
-      enqueueSuccessSnackbar('User successfully deleted')
-      setShowDeleteDialog(false)
-      loadUsers()
-    }).catch(() =>
-      enqueueErrorSnackbar('Something went wrong'))
-  }
+    function editUser(vehicle: User) {
+        setSelectedUser(vehicle)
+        setShowEditDialog(true)
+    }
 
-  function handleConfirmCreate (user: User) {
-    createUser(user.firstName, user.surname, user.email, user.role, user.firstName).then(() => {
-      enqueueSuccessSnackbar('User successfully added')
-      setShowCreateDialog(false)
-      loadUsers()
-    }).catch(() =>
-      enqueueErrorSnackbar('Something went wrong'))
-  }
+    function handleConfirmDelete() {
+        setShowDeleteDialog(false)
+        deleteUserById(selectedUser?.id || -1).then(() => {
+            enqueueSuccessSnackbar('User successfully deleted')
+            setShowDeleteDialog(false)
+            loadUsers()
+        }).catch(() =>
+            enqueueErrorSnackbar('Something went wrong'))
+    }
 
-  function handleConfirmEdit (user: User) {
-    updateUser(user).then(() => {
-      enqueueSuccessSnackbar('User successfully edited')
-      setShowEditDialog(false)
-      loadUsers()
-    }).catch(() =>
-      enqueueErrorSnackbar('Something went wrong'))
-  }
+    function handleConfirmCreate(user: UserDto) {
+        createUser(user.firstName, user.surname, user.email, user.roleId).then(() => {
+            enqueueSuccessSnackbar('User successfully added')
+            setShowCreateDialog(false)
+            loadUsers()
+        }).catch(() =>
+            enqueueErrorSnackbar('Something went wrong'))
+    }
 
-  return (
+    function handleConfirmEdit(user: UserDto, id?: number) {
+        if (id) {
+            resetPassword(id)
+            updateUser(id, user).then(() => {
+                enqueueSuccessSnackbar('User successfully edited')
+                setShowEditDialog(false)
+                loadUsers()
+            }).catch(() =>
+                enqueueErrorSnackbar('Something went wrong'))
+        }
+
+    }
+
+    return (
         <Paper className={tableClasses.mainTable}>
             <AppBar position="static" >
                 <Toolbar color="primary">
@@ -126,7 +145,7 @@ const Users = () => {
                                 <TableCell className={tableClasses.tableRow}>{user.firstName}</TableCell>
                                 <TableCell className={tableClasses.tableRow}>{user.surname}</TableCell>
                                 <TableCell className={tableClasses.tableRow}>{user.email}</TableCell>
-								<TableCell className={tableClasses.tableRow}>{user.role.id}()</TableCell>
+                                <TableCell className={tableClasses.tableRow}>{mapRoleName(user.role.name)}</TableCell>
                                 <TableCell className={tableClasses.tableRow}>
                                     <Tooltip
                                         color="primary"
@@ -182,6 +201,7 @@ const Users = () => {
                     onCancel={() => setShowCreateDialog(false)}
                     text={'New User'}
                     isDialogOpen={showCreateDialog}
+                    availableRoles={availableRoles}
                 />
             )}
 
@@ -192,9 +212,10 @@ const Users = () => {
                     text={'Edit user'}
                     isDialogOpen={showEditDialog}
                     selectedUser={selectedUser}
+                    availableRoles={availableRoles}
                 />
             )}
         </Paper>
-  )
+    )
 }
 export default Users
