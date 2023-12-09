@@ -83,6 +83,7 @@ export const Login = () => {
               autoFocus
               fullWidth
               required
+              autoComplete='username'
               type={'email'}
               label={'Enter email'}
               margin="normal"
@@ -114,6 +115,9 @@ export const Login = () => {
               helperText={formState.errors?.password?.message?.toString() || ''}
               error={!!formState.errors.password}
               InputProps={{
+                inputProps: {
+                  autoComplete: 'current-password'
+                },
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton

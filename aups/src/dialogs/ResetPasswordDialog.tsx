@@ -6,7 +6,7 @@ import Toolbar from '@mui/material/Toolbar'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material//Button'
 import { useStyles } from './dialog.style'
-import { DialogContent, IconButton, InputAdornment, TextField } from '@mui/material'
+import { DialogContent, FormControl, IconButton, InputAdornment, TextField } from '@mui/material'
 import { useForm, Controller } from 'react-hook-form'
 import { ResetPassword } from '../models/ResetPassword'
 import { getCurrentUserUsername } from '../services/AuthService'
@@ -112,114 +112,136 @@ export function ResetPasswordDialog (props: ResetPasswordDialogProps) {
         </AppBar>
       </DialogTitle>
       <DialogContent>
-        <Controller
-          name="oldPassword"
-          defaultValue={oldPassword}
-          control={control}
-          rules={{
-            required: {
-              value: true,
-              message: 'Required'
-            }
-          }}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              variant="standard"
-              fullWidth
-              required
-              type={showOldPassword ? 'text' : 'password'}
-              label={'Old Password'}
-              margin="normal"
-              helperText={formState.errors?.oldPassword?.message?.toString() || ''}
-              error={!!formState.errors.oldPassword}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleToggleOldPassword}
-                      edge="end"
-                    >
-                      {showOldPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }}
-            />
-          )}
-        /><Controller
-          name="newPassword"
-          defaultValue={newPassword}
-          control={control}
-          rules={{
-            required: {
-              value: true,
-              message: 'Required'
-            }
-          }}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              variant="standard"
-              fullWidth
-              required
-              type={showNewPassword ? 'text' : 'password'}
-              label={'New Password'}
-              margin="normal"
-              helperText={formState.errors?.newPassword?.message?.toString() || ''}
-              error={!!formState.errors.newPassword}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleToggleNewPassword}
-                      edge="end"
-                    >
-                      {showNewPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }}
-            />
-          )}
-        /><Controller
-          name="confirmPassword"
-          defaultValue={confirmPassword}
-          control={control}
-          rules={{
-            required: {
-              value: true,
-              message: 'Required'
-            },
-            validate: validatePasswordsMatch
+        <form>
+          <TextField
+            id="username-field"
+            name="username"
+            type="text"
+            autoComplete='username'
+            aria-hidden="true"
+            style={{ display: 'none' }}
+          />
+          <FormControl fullWidth>
 
-          }}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              variant="standard"
-              fullWidth
-              required
-              label={'Confirm Password'}
-              margin="normal"
-              type={showConfirmPassword ? 'text' : 'password'}
-              helperText={formState.errors?.confirmPassword?.message?.toString() || ''}
-              error={!!formState.errors.confirmPassword}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleToggleConfirmPassword}
-                      edge="end"
-                    >
-                      {showConfirmPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                    </IconButton>
-                  </InputAdornment>
-                )
+            <Controller
+              name="oldPassword"
+              defaultValue={oldPassword}
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Required'
+                }
               }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  variant="standard"
+                  fullWidth
+                  required
+                  type={showOldPassword ? 'text' : 'password'}
+                  label={'Old Password'}
+                  margin="normal"
+                  helperText={formState.errors?.oldPassword?.message?.toString() || ''}
+                  error={!!formState.errors.oldPassword}
+                  InputProps={{
+                    inputProps: {
+                      autoComplete: 'current-password'
+                    },
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={handleToggleOldPassword}
+                          edge="end"
+                        >
+                          {showOldPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
+                />
+              )}
+            /><Controller
+              name="newPassword"
+              defaultValue={newPassword}
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Required'
+                }
+              }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  variant="standard"
+                  fullWidth
+                  required
+                  type={showNewPassword ? 'text' : 'password'}
+                  label={'New Password'}
+                  margin="normal"
+                  helperText={formState.errors?.newPassword?.message?.toString() || ''}
+                  error={!!formState.errors.newPassword}
+                  InputProps={{
+                    inputProps: {
+                      autoComplete: 'new-password'
+                    },
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={handleToggleNewPassword}
+                          edge="end"
+                        >
+                          {showNewPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
+                />
+              )}
+            /><Controller
+              name="confirmPassword"
+              defaultValue={confirmPassword}
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Required'
+                },
+                validate: validatePasswordsMatch
+
+              }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  variant="standard"
+                  fullWidth
+                  required
+                  label={'Confirm Password'}
+                  margin="normal"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  helperText={formState.errors?.confirmPassword?.message?.toString() || ''}
+                  error={!!formState.errors.confirmPassword}
+                  InputProps={{
+                    inputProps: {
+                      autoComplete: 'new-password'
+                    },
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={handleToggleConfirmPassword}
+                          edge="end"
+                        >
+                          {showConfirmPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
+                />
+              )}
             />
-          )}
-        />
+          </FormControl>
+        </form>
       </DialogContent>
       <DialogActions className={classes.dialogActions}>
         <Button
@@ -231,9 +253,9 @@ export function ResetPasswordDialog (props: ResetPasswordDialogProps) {
           {'Confirm'}
         </Button>
 
-          <Button onClick={handleCancel} variant="text" data-testid="no-button" className={classes.dialogButton} color={'primary'}>
-            {'Cancel'}
-          </Button>
+        <Button onClick={handleCancel} variant="text" data-testid="no-button" className={classes.dialogButton} color={'primary'}>
+          {'Cancel'}
+        </Button>
 
       </DialogActions>
     </Dialog>
