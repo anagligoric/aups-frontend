@@ -6,7 +6,7 @@ axios.defaults.headers.common.Authorization = authHeader()
 
 export function createUser (firstName: string, surname: string, email: string, roleId : number) {
   return axios
-    .post('http://localhost:8081/api/auth/registeruser', {
+    .post('http://localhost:8081/api/user', {
       firstName,
       surname,
       email,

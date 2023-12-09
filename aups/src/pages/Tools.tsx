@@ -71,8 +71,13 @@ const Tools = () => {
       enqueueSuccessSnackbar('Tool successfully deleted')
       setShowDeleteDialog(false)
       loadTools()
-    }).catch(() =>
-      enqueueErrorSnackbar('Something went wrong'))
+    }).catch((error) => {
+            if (error.response.data) {
+                enqueueErrorSnackbar(error.response.data)
+            } else {
+                enqueueErrorSnackbar('Something went wrong')
+            }
+        })
   }
 
   function handleConfirmCreate (tool: Tool) {
@@ -80,8 +85,13 @@ const Tools = () => {
       enqueueSuccessSnackbar('Tool successfully added')
       setShowCreateDialog(false)
       loadTools()
-    }).catch(() =>
-      enqueueErrorSnackbar('Something went wrong'))
+    }).catch((error) => {
+            if (error.response.data) {
+                enqueueErrorSnackbar(error.response.data)
+            } else {
+                enqueueErrorSnackbar('Something went wrong')
+            }
+        })
   }
 
   function handleConfirmEdit (tool: Tool) {
@@ -89,8 +99,13 @@ const Tools = () => {
       enqueueSuccessSnackbar('Tool successfully edited')
       setShowEditDialog(false)
       loadTools()
-    }).catch(() =>
-      enqueueErrorSnackbar('Something went wrong'))
+    }).catch((error) => {
+            if (error.response.data) {
+                enqueueErrorSnackbar(error.response.data)
+            } else {
+                enqueueErrorSnackbar('Something went wrong')
+            }
+        })
   }
 
   return (

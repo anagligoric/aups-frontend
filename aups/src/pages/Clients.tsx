@@ -70,8 +70,13 @@ const Clients = () => {
       enqueueSuccessSnackbar('Client successfully deleted')
       setShowDeleteDialog(false)
       loadClients()
-    }).catch(() =>
-      enqueueErrorSnackbar('Something went wrong'))
+    }).catch((error) => {
+      if (error.response.data) {
+        enqueueErrorSnackbar(error.response.data)
+      } else {
+        enqueueErrorSnackbar('Something went wrong')
+      }
+    })
   }
 
   function handleConfirmCreate (client: Client) {
@@ -79,8 +84,13 @@ const Clients = () => {
       enqueueSuccessSnackbar('Client successfully added')
       setShowCreateDialog(false)
       loadClients()
-    }).catch(() =>
-      enqueueErrorSnackbar('Something went wrong'))
+    }).catch((error) => {
+      if (error.response.data) {
+        enqueueErrorSnackbar(error.response.data)
+      } else {
+        enqueueErrorSnackbar('Something went wrong')
+      }
+    })
   }
 
   function handleConfirmEdit (client: Client) {
@@ -88,8 +98,13 @@ const Clients = () => {
       enqueueSuccessSnackbar('Client successfully edited')
       setShowEditDialog(false)
       loadClients()
-    }).catch(() =>
-      enqueueErrorSnackbar('Something went wrong'))
+    }).catch((error) => {
+      if (error.response.data) {
+        enqueueErrorSnackbar(error.response.data)
+      } else {
+        enqueueErrorSnackbar('Something went wrong')
+      }
+    })
   }
 
   return (

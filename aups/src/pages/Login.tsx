@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import '../assets/login.css'
 import { login } from '../services/AuthService'
 import Button from '@mui/material/Button'
 import { Controller, useForm } from 'react-hook-form'
@@ -56,8 +55,8 @@ export const Login = () => {
     setShowPassword((prev) => !prev)
   }
 
-  return (<div >
-    <form className="loginForm">
+  return (<div className={classes.container}>
+    <form>
       <div className={classes.imgContainer}>
         <img src="avatar.png" alt="Avatar" className={classes.avatar} />
       </div>

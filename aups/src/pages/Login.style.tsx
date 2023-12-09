@@ -2,6 +2,14 @@ import { makeStyles } from 'tss-react/mui'
 
 const useStyles = makeStyles()(() => {
   return {
+    container: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      height: '100vh',
+      padding: '10px',
+      paddingTop: '30%'
+    },
     imgContainer: {
       textAlign: 'center',
       margin: '24px 0 12px 0'

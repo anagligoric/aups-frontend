@@ -70,8 +70,13 @@ const Vehicles = () => {
       enqueueSuccessSnackbar('Vehicle successfully deleted')
       setShowDeleteDialog(false)
       loadVehicles()
-    }).catch(() =>
-      enqueueErrorSnackbar('Something went wrong'))
+    }).catch((error) => {
+      if (error.response.data) {
+        enqueueErrorSnackbar(error.response.data)
+      } else {
+        enqueueErrorSnackbar('Something went wrong')
+      }
+    })
   }
 
   function handleConfirmCreate (vehicle: Vehicle) {
@@ -79,8 +84,13 @@ const Vehicles = () => {
       enqueueSuccessSnackbar('Vehicle successfully added')
       setShowCreateDialog(false)
       loadVehicles()
-    }).catch(() =>
-      enqueueErrorSnackbar('Something went wrong'))
+    }).catch((error) => {
+      if (error.response.data) {
+        enqueueErrorSnackbar(error.response.data)
+      } else {
+        enqueueErrorSnackbar('Something went wrong')
+      }
+    })
   }
 
   function handleConfirmEdit (vehicle: Vehicle) {
@@ -88,8 +98,13 @@ const Vehicles = () => {
       enqueueSuccessSnackbar('Vehicle successfully edited')
       setShowEditDialog(false)
       loadVehicles()
-    }).catch(() =>
-      enqueueErrorSnackbar('Something went wrong'))
+    }).catch((error) => {
+      if (error.response.data) {
+        enqueueErrorSnackbar(error.response.data)
+      } else {
+        enqueueErrorSnackbar('Something went wrong')
+      }
+    })
   }
 
   return (

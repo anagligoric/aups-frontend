@@ -87,8 +87,13 @@ const Users = () => {
             enqueueSuccessSnackbar('User successfully deleted')
             setShowDeleteDialog(false)
             loadUsers()
-        }).catch(() =>
-            enqueueErrorSnackbar('Something went wrong'))
+        }).catch((error) => {
+            if (error.response.data) {
+                enqueueErrorSnackbar(error.response.data)
+            } else {
+                enqueueErrorSnackbar('Something went wrong')
+            }
+        })
     }
 
     function handleConfirmCreate(user: UserDto) {
@@ -96,8 +101,13 @@ const Users = () => {
             enqueueSuccessSnackbar('User successfully added')
             setShowCreateDialog(false)
             loadUsers()
-        }).catch(() =>
-            enqueueErrorSnackbar('Something went wrong'))
+        }).catch((error) => {
+            if (error.response.data) {
+                enqueueErrorSnackbar(error.response.data)
+            } else {
+                enqueueErrorSnackbar('Something went wrong')
+            }
+        })
     }
 
     function handleConfirmEdit(user: UserDto, id?: number) {
@@ -106,8 +116,13 @@ const Users = () => {
                 enqueueSuccessSnackbar('User successfully edited')
                 setShowEditDialog(false)
                 loadUsers()
-            }).catch(() =>
-                enqueueErrorSnackbar('Something went wrong'))
+            }).catch((error) => {
+                if (error.response.data) {
+                    enqueueErrorSnackbar(error.response.data)
+                } else {
+                    enqueueErrorSnackbar('Something went wrong')
+                }
+            })
         }
 
     }
