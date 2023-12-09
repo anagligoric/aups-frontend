@@ -8,8 +8,8 @@ import InputAdornment from '@mui/material/InputAdornment'
 import { IconButton } from '@mui/material'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
-import useStyles from './Login.style'
-import { useCloseableSnackbar } from '../hooks/use-closeable-snackbar-hook'
+import useStyles from '../style/Login.style'
+import { useCloseableSnackbar } from '../hooks/useCloseableSnackbarHook'
 
 export const Login = () => {
   const nav = useNavigate()

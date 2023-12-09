@@ -6,9 +6,9 @@ const useStyles = makeStyles()(() => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      height: '100vh',
+      height: '100vh - 64px',
       padding: '10px',
-      paddingTop: '30%'
+      paddingTop: '20%'
     },
     imgContainer: {
       textAlign: 'center',
@@ -36,6 +36,14 @@ const useStyles = makeStyles()(() => {
     logoImage: {
       height: '50px',
       marginTop: '5px'
+    },
+    root: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: 'calc(100vh - 64px)'
+      // padding: Spacing[4]
     }
   }
 })

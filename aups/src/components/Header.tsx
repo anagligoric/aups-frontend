@@ -5,7 +5,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import { Box, ButtonBase } from '@mui/material'
-import useStyles from '../pages/Additional.style'
+import useStyles from '../style/HeaderUserMenu.style'
 import { useNavigate } from 'react-router-dom'
 import { logout } from '../services/AuthService'
 import { ConfirmationDialogComponent } from '../dialogs/ConfirmationDialog'
@@ -45,7 +45,7 @@ export const Header = () => {
               onClick={openSidenav}
               size="large"
             >
-              <MenuIcon />
+              <MenuIcon style={{ color: 'white' }} />
             </IconButton>
 
             <ButtonBase
@@ -56,7 +56,6 @@ export const Header = () => {
               <img src="/settings.png" className={classes.logoImage} alt="logo" />
 
             </ButtonBase>
-            <Box flexGrow={1}>{/* whitespace */}</Box>
           </Box>
           <Box
             display="flex"

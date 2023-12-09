@@ -1,7 +1,5 @@
-/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
-import './App.css'
 import {
   ThemeProvider
 } from '@mui/material'
@@ -14,7 +12,7 @@ import { getRole, getToken } from './services/AuthService'
 import { LightMuiButton } from './models/MuiButton'
 import Clients from './pages/Clients'
 import { Header } from './components/Header'
-import useStyles from './pages/Additional.style'
+import useStyles from './style/Additional.style'
 import AdditionalPage from './pages/Additional'
 import Vehicles from './pages/Vechicles'
 import Users from './pages/Users'
@@ -68,8 +66,8 @@ function App () {
 
   function renderForbiddenPage () {
     return <AdditionalPage title='403 - Forbidden'
-                    message='You are not allowed to see this page.'
-            />
+      message='You are not allowed to see this page.'
+    />
   }
 
   return (
@@ -81,8 +79,8 @@ function App () {
           <Route path="/tools" element={isAdmin ? <Tools /> : renderForbiddenPage()} />
           <Route path="/login" element={<Login />} />
           <Route path="/clients" element={isAdmin ? <Clients /> : renderForbiddenPage()} />
-		      <Route path="/users" element={isAdmin ? <Users /> : renderForbiddenPage()} />
-		      <Route path="/vehicles" element={<Vehicles />} />
+          <Route path="/users" element={isAdmin ? <Users /> : renderForbiddenPage()} />
+          <Route path="/vehicles" element={<Vehicles />} />
           <Route path='*' element={<AdditionalPage title='404 - Not Found' message='The page you are looking for might have been removed or is temporarily unavailable.' />} />
         </Routes>
       </ThemeProvider>

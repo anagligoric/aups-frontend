@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
 import { getCurrentUser, logout } from '../services/AuthService'
 import Person from '@mui/icons-material/Person'
-import headerUserMenuStyle from './HeaderUserMenu.style'
+import headerUserMenuStyle from '../style/HeaderUserMenu.style'
 import Lock from '@mui/icons-material/Lock'
 import ExitToApp from '@mui/icons-material/ExitToApp'
 import { ConfirmationDialogComponent } from '../dialogs/ConfirmationDialog'
@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import { ResetPasswordDialog } from '../dialogs/ResetPasswordDialog'
 import { resetPassword } from '../services/UserService'
 import { ResetPassword } from '../models/ResetPassword'
-import { useCloseableSnackbar } from '../hooks/use-closeable-snackbar-hook'
+import { useCloseableSnackbar } from '../hooks/useCloseableSnackbarHook'
 
 export const HeaderUserMenu = () => {
   const { classes } = headerUserMenuStyle()
@@ -87,6 +87,7 @@ export const HeaderUserMenu = () => {
                         data-testid="user-menu-button"
                         className="userMenu"
                         onClick={handleOpenMenu}
+                        style={{ backgroundColor: 'transparent' }}
                     >
                         <span>{getCurrentUser() || ''}</span>
                         <Person />

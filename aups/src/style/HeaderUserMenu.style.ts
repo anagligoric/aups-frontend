@@ -11,6 +11,18 @@ const headerUserMenuStyle = makeStyles()(() => ({
       color: grey[50],
       textTransform: 'capitalize'
     }
+  },
+  logoButton: {
+    boxSizing: 'content-box',
+    position: 'relative',
+    lineHeight: 0,
+    float: 'none',
+    justifyContent: 'center',
+    left: '45%'
+  },
+  logoImage: {
+    height: '50px',
+    marginTop: '5px'
   }
 }))
 

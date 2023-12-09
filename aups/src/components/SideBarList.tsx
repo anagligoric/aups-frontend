@@ -1,20 +1,16 @@
-/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import ListItemText from '@mui/material/ListItemText'
 import Toolbar from '@mui/material/Toolbar'
 import Divider from '@mui/material/Divider'
-// Icons
 import CloseIcon from '@mui/icons-material/Close'
 import GroupIcon from '@mui/icons-material/Group'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { SidebarListItem } from './SideBarListItem'
-import useStyles from './SideBar.style'
+import useStyles from '../style/SideBar.style'
 import { getRole } from '../services/AuthService'
-import { ListItemIcon, SvgIcon } from '@mui/material'
 import DirectionsCar from '@mui/icons-material/DirectionsCar'
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonAdd from '@mui/icons-material/PersonAdd'
 
 export interface SidebarListProps {
@@ -47,7 +43,7 @@ export function SidebarList (props: SidebarListProps) {
             className={classes.drawer}
             onKeyDown={handleClose}
         >
-            <Toolbar className="sideBarToolbar">
+            <Toolbar style={{ padding: 0 }} className={classes.toolbar}>
                 <IconButton
                     onClick={handleClose}
                     color="inherit"
@@ -77,7 +73,7 @@ export function SidebarList (props: SidebarListProps) {
                         <SettingsIcon />
                     </SidebarListItem>
                 )}
-				 {isAdmin && (
+                {isAdmin && (
                     <SidebarListItem
                         closeSidebar={handleClose}
                         url={'/vehicles'}
@@ -86,7 +82,7 @@ export function SidebarList (props: SidebarListProps) {
                         <DirectionsCar />
                     </SidebarListItem>
                 )}
-					 {isAdmin && (
+                {isAdmin && (
                     <SidebarListItem
                         closeSidebar={handleClose}
                         url={'/users'}

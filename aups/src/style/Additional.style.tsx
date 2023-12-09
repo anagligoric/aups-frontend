@@ -1,4 +1,5 @@
 import { makeStyles } from 'tss-react/mui'
+import { Spacing } from './spacing.constants'
 
 const useStyles = makeStyles()(() => {
   return {
@@ -9,18 +10,17 @@ const useStyles = makeStyles()(() => {
       right: 0,
       zIndex: 10
     },
-    logoButton: {
-      boxSizing: 'content-box',
-      position: 'relative',
-      lineHeight: 0,
-      float: 'none',
+    root: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
       justifyContent: 'center',
-      left: '45%'
+      height: 'calc(100vh - 64px)',
+      padding: Spacing[4]
     },
-    logoImage: {
-      height: '50px',
-      marginTop: '5px'
-
+    text: {
+      color: '#8C6351',
+      marginBottom: Spacing[2]
     }
   }
 })
