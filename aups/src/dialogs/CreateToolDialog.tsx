@@ -69,7 +69,6 @@ export function CreateToolDialog (props: CreateToolDialogProps) {
             <TextField
               {...field}
               variant="standard"
-              onSubmit={() => { }}
               autoFocus
               fullWidth
               required
@@ -86,7 +85,6 @@ export function CreateToolDialog (props: CreateToolDialogProps) {
           disabled={!formState.isValid}
           onClick={handleConfirm}
           variant="text"
-          autoFocus
           data-testid="yes-button"
         >
           {'Save'}

@@ -7,20 +7,15 @@ import Toolbar from '@mui/material/Toolbar'
 import { Box, ButtonBase } from '@mui/material'
 import useStyles from '../pages/Additional.style'
 import { useNavigate } from 'react-router-dom'
-import LogoutIcon from '@mui/icons-material/Logout'
 import { logout } from '../services/AuthService'
 import { ConfirmationDialogComponent } from '../dialogs/ConfirmationDialog'
+import { HeaderUserMenu } from './HeaderUserMenu'
 
 export const Header = () => {
   const nav = useNavigate()
   const { classes } = useStyles()
   const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-
-  function handleLogout (event: any) {
-    event.preventDefault()
-    setOpenConfirmationDialog(true)
-  }
 
   function onConfirm () {
     setOpenConfirmationDialog(false)
@@ -70,13 +65,7 @@ export const Header = () => {
             flexShrink={0}
             justifyContent="space-between"
           >
-            <IconButton
-              data-testid="sidebar-menu"
-              onClick={handleLogout}
-              size="large"
-            >
-              <LogoutIcon />
-            </IconButton>
+            <HeaderUserMenu />
           </Box>
         </Toolbar>
 

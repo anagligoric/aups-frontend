@@ -86,7 +86,6 @@ export function CreateVehicleDialog (props: CreateVehicleDialogProps) {
             <TextField
               {...field}
               variant="standard"
-              onSubmit={() => { }}
               autoFocus
               fullWidth
               required
@@ -110,8 +109,6 @@ export function CreateVehicleDialog (props: CreateVehicleDialogProps) {
             <TextField
               {...field}
               variant="standard"
-              onSubmit={() => { }}
-              autoFocus
               fullWidth
               required
               label={'LicencePlate'}
@@ -134,8 +131,6 @@ export function CreateVehicleDialog (props: CreateVehicleDialogProps) {
             <TextField
               {...field}
               variant="standard"
-              onSubmit={() => { }}
-              autoFocus
               fullWidth
               required
               label={'Type'}
@@ -151,7 +146,6 @@ export function CreateVehicleDialog (props: CreateVehicleDialogProps) {
           disabled={!formState.isValid}
           onClick={handleConfirm}
           variant="text"
-          autoFocus
           data-testid="yes-button"
         >
           {'Save'}

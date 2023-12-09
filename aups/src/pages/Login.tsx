@@ -107,7 +107,6 @@ export const Login = () => {
             <TextField
               {...field}
               variant="standard"
-              autoFocus
               fullWidth
               required
               type={showPassword ? 'text' : 'password'}
@@ -134,7 +133,6 @@ export const Login = () => {
           disabled={!formState.isValid}
           onClick={handleSubmit}
           variant="text"
-          autoFocus
         >
           {'Login'}
         </Button>

@@ -1,11 +1,12 @@
 import axios from 'axios'
 import { authHeader } from './AuthService'
 import { UserDto } from '../models/User'
+import { ResetPassword } from '../models/ResetPassword'
+axios.defaults.headers.common.Authorization = authHeader()
 
 export function createUser (firstName: string, surname: string, email: string, roleId : number) {
   return axios
     .post('http://localhost:8081/api/auth/registeruser', {
-      // id: 1,
       firstName,
       surname,
       email,
@@ -31,9 +32,9 @@ export function updateUser (id: number, user: UserDto) {
       { headers: { Authorization: authHeader() } })
 }
 
-export function resetPassword (id: number) {
+export function resetPassword (resetPassword: ResetPassword) {
   return axios
-    .put(`http://localhost:8081/api/user/reset-password/${id}`,
+    .put('http://localhost:8081/api/user/reset-password', resetPassword,
       { headers: { Authorization: authHeader() } })
 }
 

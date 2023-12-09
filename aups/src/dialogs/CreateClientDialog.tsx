@@ -108,7 +108,6 @@ export function CreateClientDialog (props: CreateClientDialogProps) {
             <TextField
               {...field}
               variant="standard"
-              onSubmit={() => { }}
               autoFocus
               fullWidth
               required
@@ -132,8 +131,6 @@ export function CreateClientDialog (props: CreateClientDialogProps) {
             <TextField
               {...field}
               variant="standard"
-              onSubmit={() => { }}
-              autoFocus
               fullWidth
               required
               label={'Surname'}
@@ -156,8 +153,6 @@ export function CreateClientDialog (props: CreateClientDialogProps) {
             <TextField
               {...field}
               variant="standard"
-              onSubmit={() => { }}
-              autoFocus
               fullWidth
               required
               label={'PhoneNumber'}
@@ -181,8 +176,6 @@ export function CreateClientDialog (props: CreateClientDialogProps) {
             <TextField
               {...field}
               variant="standard"
-              onSubmit={() => { }}
-              autoFocus
               fullWidth
               required
               label={'City'}
@@ -206,7 +199,6 @@ export function CreateClientDialog (props: CreateClientDialogProps) {
             <TextField
               {...field}
               variant="standard"
-              autoFocus
               fullWidth
               required
               label={'Street'}
@@ -230,9 +222,7 @@ export function CreateClientDialog (props: CreateClientDialogProps) {
             <TextField
               {...field}
               variant="standard"
-              onSubmit={() => { }}
               type='number'
-              autoFocus
               fullWidth
               required
               label={'Number'}
@@ -248,7 +238,6 @@ export function CreateClientDialog (props: CreateClientDialogProps) {
           disabled={!formState.isValid}
           onClick={handleConfirm}
           variant="text"
-          autoFocus
           data-testid="yes-button"
         >
           {'Save'}

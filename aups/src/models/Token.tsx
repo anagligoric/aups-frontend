@@ -1,5 +1,7 @@
 export default interface Token {
-    username: string,
+    email: string,
     expires: string,
-    role: string[]
+    role: string[],
+    firstName: string,
+    surname: string
 }

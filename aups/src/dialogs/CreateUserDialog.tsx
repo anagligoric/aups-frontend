@@ -96,7 +96,6 @@ export function CreateUserDialog (props: CreateUserDialogProps) {
             <TextField
               {...field}
               variant="standard"
-              onSubmit={() => { }}
               autoFocus
               fullWidth
               required
@@ -120,8 +119,6 @@ export function CreateUserDialog (props: CreateUserDialogProps) {
             <TextField
               {...field}
               variant="standard"
-              onSubmit={() => { }}
-              autoFocus
               fullWidth
               required
               label={'Surname'}
@@ -144,7 +141,6 @@ export function CreateUserDialog (props: CreateUserDialogProps) {
             <TextField
               {...field}
               variant="standard"
-              autoFocus
               fullWidth
               required
               label={'Email'}
@@ -182,7 +178,6 @@ export function CreateUserDialog (props: CreateUserDialogProps) {
           disabled={!formState.isValid}
           onClick={handleConfirm}
           variant="text"
-          autoFocus
           data-testid="yes-button"
         >
           {'Save'}
