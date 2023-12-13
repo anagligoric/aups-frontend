@@ -39,7 +39,7 @@ export function CreateToolDialog (props: CreateToolDialogProps) {
   }
 
   const { watch, control, formState } = useForm({ mode: 'onChange' })
-  const nameWatch = watch('name')
+  const nameWatch = watch('creationDate')
 
   useEffect(() => {
     if (nameWatch) {
@@ -56,7 +56,7 @@ export function CreateToolDialog (props: CreateToolDialogProps) {
       </DialogTitle>
       <DialogContent>
         <Controller
-          name="name"
+          name="creationDate"
           defaultValue={name}
           control={control}
           rules={{

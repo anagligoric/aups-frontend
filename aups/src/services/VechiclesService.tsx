@@ -3,7 +3,7 @@ import axios from 'axios'
 import { authHeader } from './AuthService'
 import { Vehicle } from '../models/Vehicle'
 
-export function createVehicle(name: string, licencePlate: string, type: string,) {
+export function createVehicle(name: string, licencePlate: string, type: string) {
   return axios
     .post('http://localhost:8081/api/vehicle', {
       name,

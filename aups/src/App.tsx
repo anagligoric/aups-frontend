@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import {
@@ -16,6 +17,8 @@ import useStyles from './style/Additional.style'
 import AdditionalPage from './pages/Additional'
 import Vehicles from './pages/Vechicles'
 import Users from './pages/Users'
+import Jobs from './pages/Job'
+import Documents from './pages/Document'
 
 function App () {
   const { classes } = useStyles()
@@ -81,6 +84,8 @@ function App () {
           <Route path="/clients" element={isAdmin ? <Clients /> : renderForbiddenPage()} />
           <Route path="/users" element={isAdmin ? <Users /> : renderForbiddenPage()} />
           <Route path="/vehicles" element={<Vehicles />} />
+		  <Route path="/jobs" element={<Jobs/>} />
+		  <Route path="/documents" element={<Documents/>} />
           <Route path='*' element={<AdditionalPage title='404 - Not Found' message='The page you are looking for might have been removed or is temporarily unavailable.' />} />
         </Routes>
       </ThemeProvider>

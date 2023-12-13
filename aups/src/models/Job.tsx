@@ -5,6 +5,7 @@ export interface Job {
     id: number
     type: string
     description: string
-	status: string
-    client: Client
+    team: string
+    client: Client[]
+    document: Document[]
 }

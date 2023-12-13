@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import { ConfirmationDialogComponent } from '../dialogs/ConfirmationDialog'
 import Paper from '@mui/material/Paper'
@@ -10,40 +11,58 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import TableBody from '@mui/material/TableBody'
+import useTableStyles from '../style/Table.style'
 import DeleteIcon from '@mui/icons-material/Delete'
 import Tooltip from '@mui/material/Tooltip'
 import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit'
+import TableFooter from '@mui/material/TableFooter'
 import TablePagination from '@mui/material/TablePagination'
 import { useCloseableSnackbar } from '../hooks/useCloseableSnackbarHook'
-import { Client } from '../models/Client'
-import { createClient, deleteClientById, getAllClient, updateClient } from '../services/ClientService'
-import { CreateClientDialog } from '../dialogs/CreateClientDialog'
-import { TableFooter } from '@mui/material'
-import useTableStyles from '../style/Table.style'
+import { CreateJobDialog } from '../dialogs/CreateJobDialog'
+import { Document } from '../models/Document'
+import { Job } from '../models/Job'
+import { createDocument, deleteDocumentById, getAllDocuments, updateDocument } from '../services/DocumentService'
+import { CreateDocumentDialog } from '../dialogs/CreateDocumentDialog'
+import { getAllJobs } from '../services/JobService'
 
-const Clients = () => {
+const Documents = () => {
   const { classes: tableClasses } = useTableStyles()
   const { enqueueErrorSnackbar, enqueueSuccessSnackbar } = useCloseableSnackbar()
 
-  const [clientsDb, setClientsDb] = useState<Client[]>([])
+  const [documentsDb, setDocumentsDb] = useState<Document[]>([])
   const [paginationPage, setPaginationPage] = useState(0)
   const [paginationRows, setPaginationRows] = useState(10)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [showEditDialog, setShowEditDialog] = useState(false)
+  const [availableJobs, setAvailableJobs] = useState<Job[]>([])
 
-  const [selectedClient, setSelectedClient] = useState<Client>()
+  const [selectedDocument, setSelectedDocument] = useState<Document>()
 
   useEffect(() => {
-    loadClients()
+    loadDocuments()
   }, [])
 
-  function loadClients () {
-    getAllClient().then((res: any) => {
-      setClientsDb(res.data)
+  useEffect(() => {
+	getAllJobs().then((response) => {
+		setAvailableJobs(response.data)
+	})
+		.catch((error) => {
+			if (error.response.data) {
+				enqueueErrorSnackbar(error.response.data)
+			} else {
+				enqueueErrorSnackbar('Something went wrong')
+			}
+		})
+}, [])
+
+function loadDocuments () {
+    getAllDocuments().then((res: any) => {
+      setDocumentsDb(res.data)
     })
   }
+
 
   function handlePaginationChange (event: unknown, newPage: number) {
     setPaginationPage(newPage)
@@ -54,22 +73,22 @@ const Clients = () => {
     setPaginationPage(0)
   }
 
-  function deleteClient (client: Client) {
-    setSelectedClient(client)
+  function deleteDocument (document: Document) {
+    setSelectedDocument(document)
     setShowDeleteDialog(true)
   }
 
-  function editClient (client: Client) {
-    setSelectedClient(client)
+  function editDocument (document: Document) {
+    setSelectedDocument(document)
     setShowEditDialog(true)
   }
 
   function handleConfirmDelete () {
     setShowDeleteDialog(false)
-    deleteClientById(selectedClient?.id || -1).then(() => {
-      enqueueSuccessSnackbar('Client successfully deleted')
+    deleteDocumentById(selectedDocument?.id || -1).then(() => {
+      enqueueSuccessSnackbar('Document successfully deleted')
       setShowDeleteDialog(false)
-      loadClients()
+      loadDocuments()
     }).catch((error) => {
       if (error.response.data) {
         enqueueErrorSnackbar(error.response.data)
@@ -79,11 +98,11 @@ const Clients = () => {
     })
   }
 
-  function handleConfirmCreate (client: Client) {
-    createClient(client.firstName, client.surname, client.phoneNumber, client.city, client.street, client.number).then(() => {
-      enqueueSuccessSnackbar('Client successfully added')
+  function handleConfirmCreate (document: Document) {
+    createDocument(document.number, document.creationDate, document.price, document.job).then(() => {
+      enqueueSuccessSnackbar('Document successfully added')
       setShowCreateDialog(false)
-      loadClients()
+      loadDocuments()
     }).catch((error) => {
       if (error.response.data) {
         enqueueErrorSnackbar(error.response.data)
@@ -93,27 +112,31 @@ const Clients = () => {
     })
   }
 
-  function handleConfirmEdit (client: Client) {
-    updateClient(client).then(() => {
-      enqueueSuccessSnackbar('Client successfully edited')
-      setShowEditDialog(false)
-      loadClients()
-    }).catch((error) => {
-      if (error.response.data) {
-        enqueueErrorSnackbar(error.response.data)
-      } else {
-        enqueueErrorSnackbar('Something went wrong')
-      }
-    })
-  }
+  function handleConfirmEdit(document: Document, id?: number) {
+	console.log(id)
+	console.log(document)
+	if (id) {
+		updateDocument(id, document).then(() => {
+			enqueueSuccessSnackbar('Document successfully edited')
+			setShowEditDialog(false)
+			loadDocuments()
+		}).catch((error) => {
+			if (error.response.data) {
+				enqueueErrorSnackbar(error.response.data)
+			} else {
+				enqueueErrorSnackbar('Something went wrong')
+			}
+		})
+	}
+}
 
   return (
         <Paper className={tableClasses.mainTable}>
             <AppBar position="static" >
                 <Toolbar color="primary">
-                    <Typography variant="h6">{'Clients'}</Typography>
+                    <Typography variant="h6">{'Jobs'}</Typography>
                     <div className={tableClasses.header}>
-                        <Tooltip title={'Add client'} onClick={() => { setShowCreateDialog(true) }}>
+                        <Tooltip title={'Add document'} onClick={() => { setShowCreateDialog(true) }}>
                             <IconButton className={tableClasses.active} size="large">
                                 <AddIcon />
                             </IconButton>
@@ -125,30 +148,27 @@ const Clients = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>{'First name'}</TableCell>
-                            <TableCell>{'Surname'}</TableCell>
-                            <TableCell>{'Phone number'}</TableCell>
-                            <TableCell>{'City'}</TableCell>
-                            <TableCell>{'Street'}</TableCell>
-                            <TableCell>{'Street Number'}</TableCell>
+                            <TableCell>{'Number'}</TableCell>
+                            <TableCell>{'Creation date'}</TableCell>
+                            <TableCell>{'Price'}</TableCell>
+							<TableCell>{'Job description'}</TableCell>
                             <TableCell />
                             <TableCell />
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {clientsDb.slice(paginationPage * paginationRows, paginationPage * paginationRows + paginationRows).map((client: Client) => (
-                            <TableRow key={client.id} classes={{ root: 'small-row datatableRow' }}>
-                                <TableCell className={tableClasses.tableRow}>{client.firstName}</TableCell>
-                                <TableCell className={tableClasses.tableRow}>{client.surname}</TableCell>
-                                <TableCell className={tableClasses.tableRow}>{client.phoneNumber}</TableCell>
-                                <TableCell className={tableClasses.tableRow}>{client.city}</TableCell>
-                                <TableCell className={tableClasses.tableRow}>{client.street}</TableCell>
-                                <TableCell className={tableClasses.tableRow}>{client.number}</TableCell>
+                        {documentsDb.slice(paginationPage * paginationRows, paginationPage * paginationRows + paginationRows).map((document: Document) => (
+                            <TableRow key={document.id} classes={{ root: 'small-row datatableRow' }}>
+                                <TableCell className={tableClasses.tableRow}>{document.number}</TableCell>
+                                <TableCell className={tableClasses.tableRow}>{document.creationDate.toString()}</TableCell>
+                                <TableCell className={tableClasses.tableRow}>{document.price}</TableCell>
+								<TableCell className={tableClasses.tableRow}>{document.job.description}</TableCell>
+
                                 <TableCell className={tableClasses.tableRow}>
                                     <Tooltip
                                         color="primary"
-                                        title={'Edit client'}
-                                        onClick={() => { editClient(client) }}
+                                        title={'Edit document'}
+                                        onClick={() => { editDocument(document) }}
                                     >
                                         <IconButton size={'small'}>
                                             <EditIcon />
@@ -157,8 +177,8 @@ const Clients = () => {
                                 </TableCell>
                                 <TableCell className={tableClasses.tableRow}>
                                     <Tooltip
-                                        title={'Delete client'}
-                                        onClick={() => { deleteClient(client) }}
+                                        title={'Delete document'}
+                                        onClick={() => { deleteDocument(document) }}
                                     >
                                         <IconButton size={'small'} color="error">
                                             <DeleteIcon />
@@ -172,7 +192,7 @@ const Clients = () => {
                         <TableRow>
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 15, 100]}
-                                count={clientsDb.length}
+                                count={documentsDb.length}
                                 rowsPerPage={paginationRows}
                                 colSpan={9}
                                 page={paginationPage}
@@ -189,29 +209,32 @@ const Clients = () => {
                 <ConfirmationDialogComponent
                     onConfirm={handleConfirmDelete}
                     onCancel={() => setShowDeleteDialog(false)}
-                    text={'Are you sure you want to delete this client?'}
+                    text={'Are you sure you want to delete this document?'}
                     isDialogOpen={showDeleteDialog}
                 />
             )}
             {showCreateDialog && (
-                <CreateClientDialog
+                <CreateDocumentDialog
                     onConfirm={handleConfirmCreate}
                     onCancel={() => setShowCreateDialog(false)}
-                    text={'New Client'}
+                    text={'New Job'}
                     isDialogOpen={showCreateDialog}
+					selectedDocument ={selectedDocument}
+					availableJobs={availableJobs}
                 />
             )}
 
             {showEditDialog && (
-                <CreateClientDialog
+                <CreateDocumentDialog
                     onConfirm={handleConfirmEdit}
                     onCancel={() => setShowEditDialog(false)}
-                    text={'Edit Client'}
+                    text={'Edit Job'}
                     isDialogOpen={showEditDialog}
-                    selectedClient={selectedClient}
+					selectedDocument ={selectedDocument}
+					availableJobs={availableJobs}
                 />
             )}
         </Paper>
   )
 }
-export default Clients
+export default Documents

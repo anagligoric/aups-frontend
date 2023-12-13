@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -6,33 +5,27 @@ import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material//Button'
-import { useStyles } from '../style/Dialog.style'
+import { useStyles } from './dialog.style'
 import { DialogContent, TextField } from '@mui/material'
 import { useForm, Controller } from 'react-hook-form'
-import { Vehicle } from '../models/Vehicle'
+import { Location } from '../models/Location'
 
-export interface CreateVehicleDialogProps {
+export interface CreateLocationDialogProps {
   isDialogOpen: boolean;
-  text: string;
-  onConfirm: (vehicle: Vehicle) => void;
+  onConfirm: (location: Location) => void;
   onCancel?: () => void;
-  selectedVehicle?: Vehicle;
+  text: string;
 }
 
-export function CreateVehicleDialog (props: CreateVehicleDialogProps) {
+export function CreateLocationDialog (props: CreateLocationDialogProps) {
   const { classes } = useStyles()
 
-  const [name, setName] = useState(props.selectedVehicle?.name || '')
-  const [licencePlate, setLicencePlate] = useState(props.selectedVehicle?.status || '')
-  const [type, setType] = useState(props.selectedVehicle?.type || '')
+  const [city, setCity] = useState('')
+  const [street, setStreet] = useState('')
+  const [number, setNumber] = useState('')
 
   function handleConfirm () {
-
-    const vehicle: Vehicle = { name: name, status: licencePlate, type:  type } as Vehicle
-    if (props.selectedVehicle) {
-		vehicle.id = props.selectedVehicle?.id
-    }
-    props.onConfirm(vehicle)
+    // TODO call props.onConfirm();
   }
 
   function handleCancel (e: React.MouseEvent, reason: string) {
@@ -42,27 +35,27 @@ export function CreateVehicleDialog (props: CreateVehicleDialogProps) {
   }
 
   const { watch, control, formState } = useForm({ mode: 'onChange' })
-  const nameWatch = watch('creationDate')
-  const licencePlateWatch = watch('licencePlate')
-  const typeWatch = watch('number')
+  const cityWatch = watch('city')
+  const streetWatch = watch('street')
+  const numberWatch = watch('number')
 
   useEffect(() => {
-    if (nameWatch) {
-      setName(nameWatch)
+    if (cityWatch) {
+      setCity(cityWatch)
     }
-  }, [nameWatch])
+  }, [cityWatch])
 
   useEffect(() => {
-    if (licencePlateWatch) {
-      setLicencePlate(licencePlateWatch)
+    if (streetWatch) {
+      setStreet(streetWatch)
     }
-  }, [licencePlateWatch])
+  }, [streetWatch])
 
   useEffect(() => {
-    if (typeWatch) {
-      setType(typeWatch)
+    if (numberWatch) {
+      setNumber(numberWatch)
     }
-  }, [typeWatch])
+  }, [numberWatch])
 
   return (
     <Dialog fullWidth open={props.isDialogOpen} onClose={handleCancel} data-testid="confirmation-dialog">
@@ -73,8 +66,33 @@ export function CreateVehicleDialog (props: CreateVehicleDialogProps) {
       </DialogTitle>
       <DialogContent>
         <Controller
-          name="creationDate"
-          defaultValue={name}
+          name="city"
+          defaultValue={city}
+          control={control}
+          rules={{
+            required: {
+              value: true,
+              message: 'Required'
+            }
+          }}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              variant="standard"
+              onSubmit={() => { }}
+              autoFocus
+              fullWidth
+              required
+              label={'City'}
+              margin="normal"
+              helperText={formState.errors?.city?.message?.toString() || ''}
+              error={!!formState.errors.city}
+            />
+          )}
+        />
+        <Controller
+          name="street"
+          defaultValue={street}
           control={control}
           rules={{
             required: {
@@ -89,37 +107,16 @@ export function CreateVehicleDialog (props: CreateVehicleDialogProps) {
               autoFocus
               fullWidth
               required
-              label={'Name'}
+              label={'Street'}
               margin="normal"
-              helperText={formState.errors?.name?.message?.toString() || ''}
-              error={!!formState.errors.name}
+              helperText={formState.errors?.street?.message?.toString() || ''}
+              error={!!formState.errors.street}
             />
           )}
-        /><Controller
-          name="licencePlate"
-          defaultValue={licencePlate}
-          control={control}
-          rules={{
-            required: {
-              value: true,
-              message: 'Required'
-            }
-          }}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              variant="standard"
-              fullWidth
-              required
-              label={'LicencePlate'}
-              margin="normal"
-              helperText={formState.errors?.licencePlate?.message?.toString() || ''}
-              error={!!formState.errors.licencePlate}
-            />
-          )}
-        /><Controller
+        />
+        <Controller
           name="number"
-          defaultValue={type}
+          defaultValue={number}
           control={control}
           rules={{
             required: {
@@ -131,12 +128,15 @@ export function CreateVehicleDialog (props: CreateVehicleDialogProps) {
             <TextField
               {...field}
               variant="standard"
+              onSubmit={() => { }}
+              type='number'
+              autoFocus
               fullWidth
               required
-              label={'Type'}
+              label={'Number'}
               margin="normal"
-              helperText={formState.errors?.type?.message?.toString() || ''}
-              error={!!formState.errors.type}
+              helperText={formState.errors?.number?.message?.toString() || ''}
+              error={!!formState.errors.number}
             />
           )}
         />
@@ -146,6 +146,7 @@ export function CreateVehicleDialog (props: CreateVehicleDialogProps) {
           disabled={!formState.isValid}
           onClick={handleConfirm}
           variant="text"
+          autoFocus
           data-testid="yes-button"
         >
           {'Save'}
