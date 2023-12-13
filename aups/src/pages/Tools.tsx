@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import { ConfirmationDialogComponent } from '../dialogs/ConfirmationDialog'
 import Paper from '@mui/material/Paper'
@@ -72,12 +71,12 @@ const Tools = () => {
       setShowDeleteDialog(false)
       loadTools()
     }).catch((error) => {
-            if (error.response.data) {
-                enqueueErrorSnackbar(error.response.data)
-            } else {
-                enqueueErrorSnackbar('Something went wrong')
-            }
-        })
+      if (error.response.data) {
+        enqueueErrorSnackbar(error.response.data)
+      } else {
+        enqueueErrorSnackbar('Something went wrong')
+      }
+    })
   }
 
   function handleConfirmCreate (tool: Tool) {
@@ -86,12 +85,12 @@ const Tools = () => {
       setShowCreateDialog(false)
       loadTools()
     }).catch((error) => {
-            if (error.response.data) {
-                enqueueErrorSnackbar(error.response.data)
-            } else {
-                enqueueErrorSnackbar('Something went wrong')
-            }
-        })
+      if (error.response.data) {
+        enqueueErrorSnackbar(error.response.data)
+      } else {
+        enqueueErrorSnackbar('Something went wrong')
+      }
+    })
   }
 
   function handleConfirmEdit (tool: Tool) {
@@ -100,12 +99,12 @@ const Tools = () => {
       setShowEditDialog(false)
       loadTools()
     }).catch((error) => {
-            if (error.response.data) {
-                enqueueErrorSnackbar(error.response.data)
-            } else {
-                enqueueErrorSnackbar('Something went wrong')
-            }
-        })
+      if (error.response.data) {
+        enqueueErrorSnackbar(error.response.data)
+      } else {
+        enqueueErrorSnackbar('Something went wrong')
+      }
+    })
   }
 
   return (

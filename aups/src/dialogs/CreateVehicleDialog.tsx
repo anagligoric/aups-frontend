@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -27,10 +26,9 @@ export function CreateVehicleDialog (props: CreateVehicleDialogProps) {
   const [type, setType] = useState(props.selectedVehicle?.type || '')
 
   function handleConfirm () {
-
-    const vehicle: Vehicle = { name: name, status: licencePlate, type:  type } as Vehicle
+    const vehicle: Vehicle = { name, status: licencePlate, type } as Vehicle
     if (props.selectedVehicle) {
-		vehicle.id = props.selectedVehicle?.id
+      vehicle.id = props.selectedVehicle?.id
     }
     props.onConfirm(vehicle)
   }

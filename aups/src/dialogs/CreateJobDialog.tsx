@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import React, { useEffect, useState } from 'react'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -12,7 +10,6 @@ import { DialogContent, FormControl, MenuItem, Select, TextField } from '@mui/ma
 import { useForm, Controller } from 'react-hook-form'
 import { Client } from '../models/Client'
 import { Job } from '../models/Job'
-import { getClientById } from '../services/ClientService'
 
 export interface CreateJobDialogProps {
   isDialogOpen: boolean;
@@ -24,7 +21,6 @@ export interface CreateJobDialogProps {
 }
 
 export function CreateJobDialog (props: CreateJobDialogProps) {
-
   const { classes } = useStyles()
   const { watch, control, formState } = useForm({ mode: 'onChange' })
 
@@ -33,7 +29,7 @@ export function CreateJobDialog (props: CreateJobDialogProps) {
   const [client, setClient] = useState(props.selectedJob?.client || props.availableClients[0])
 
   function handleConfirm () {
-    const job: Job = { type: type, description: description, client: client } as Job
+    const job: Job = { type, description, client } as Job
     if (props.selectedJob) {
       props.onConfirm(job, props.selectedJob.id)
       return

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import { ConfirmationDialogComponent } from '../dialogs/ConfirmationDialog'
 import Paper from '@mui/material/Paper'
@@ -44,19 +43,19 @@ const Jobs = () => {
   }, [])
 
   useEffect(() => {
-	getAllClient().then((response) => {
-		setAvailableClients(response.data)
-	})
-		.catch((error) => {
-			if (error.response.data) {
-				enqueueErrorSnackbar(error.response.data)
-			} else {
-				enqueueErrorSnackbar('Something went wrong')
-			}
-		})
-}, [])
+    getAllClient().then((response) => {
+      setAvailableClients(response.data)
+    })
+      .catch((error) => {
+        if (error.response.data) {
+          enqueueErrorSnackbar(error.response.data)
+        } else {
+          enqueueErrorSnackbar('Something went wrong')
+        }
+      })
+  }, [])
 
-function loadJobs () {
+  function loadJobs () {
     getAllJobs().then((res: any) => {
       setJobsDb(res.data)
     })
@@ -110,126 +109,126 @@ function loadJobs () {
     })
   }
 
-  function handleConfirmEdit(job: Job, id?: number) {
-	if (id) {
-		updateJob(id, job).then(() => {
-			enqueueSuccessSnackbar('User successfully edited')
-			setShowEditDialog(false)
-			loadJobs()
-		}).catch((error) => {
-			if (error.response.data) {
-				enqueueErrorSnackbar(error.response.data)
-			} else {
-				enqueueErrorSnackbar('Something went wrong')
-			}
-		})
-	}
-}
+  function handleConfirmEdit (job: Job, id?: number) {
+    if (id) {
+      updateJob(id, job).then(() => {
+        enqueueSuccessSnackbar('User successfully edited')
+        setShowEditDialog(false)
+        loadJobs()
+      }).catch((error) => {
+        if (error.response.data) {
+          enqueueErrorSnackbar(error.response.data)
+        } else {
+          enqueueErrorSnackbar('Something went wrong')
+        }
+      })
+    }
+  }
 
   return (
-        <Paper className={tableClasses.mainTable}>
-            <AppBar position="static" >
-                <Toolbar color="primary">
-                    <Typography variant="h6">{'Jobs'}</Typography>
-                    <div className={tableClasses.header}>
-                        <Tooltip title={'Add job'} onClick={() => { setShowCreateDialog(true) }}>
-                            <IconButton className={tableClasses.active} size="large">
-                                <AddIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </div>
-                </Toolbar>
-            </AppBar>
-            <div className={tableClasses.tableWrapper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>{'Type'}</TableCell>
-                            <TableCell>{'Description'}</TableCell>
-                            <TableCell>{'Status'}</TableCell>
-							<TableCell>{'Client'}</TableCell>
-                            <TableCell />
-                            <TableCell />
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {jobsDb.slice(paginationPage * paginationRows, paginationPage * paginationRows + paginationRows).map((job: Job) => (
-                            <TableRow key={job.id} classes={{ root: 'small-row datatableRow' }}>
-                                <TableCell className={tableClasses.tableRow}>{job.type}</TableCell>
-                                <TableCell className={tableClasses.tableRow}>{job.description}</TableCell>
-                                <TableCell className={tableClasses.tableRow}>{job.status}</TableCell>
-								<TableCell className={tableClasses.tableRow}>{job.client.firstName}</TableCell>
-                                <TableCell className={tableClasses.tableRow}>
-                                    <Tooltip
-                                        color="primary"
-                                        title={'Edit job'}
-                                        onClick={() => { editJob(job) }}
-                                    >
-                                        <IconButton size={'small'}>
-                                            <EditIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                </TableCell>
-                                <TableCell className={tableClasses.tableRow}>
-                                    <Tooltip
-                                        title={'Delete job'}
-                                        onClick={() => { deleteJob(job) }}
-                                    >
-                                        <IconButton size={'small'} color="error">
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                rowsPerPageOptions={[5, 10, 15, 100]}
-                                count={jobsDb.length}
-                                rowsPerPage={paginationRows}
-                                colSpan={9}
-                                page={paginationPage}
-                                labelDisplayedRows={({ from, to, count }) => `${from}-${to} of ${count}`}
-                                labelRowsPerPage={'Rows per page'}
-                                onPageChange={handlePaginationChange}
-                                onRowsPerPageChange={handleChangeRowsPerPage}
-                            />
-                        </TableRow>
-                    </TableFooter>
-                </Table>
-            </div>
-            {showDeleteDialog && (
-                <ConfirmationDialogComponent
-                    onConfirm={handleConfirmDelete}
-                    onCancel={() => setShowDeleteDialog(false)}
-                    text={'Are you sure you want to delete this job?'}
-                    isDialogOpen={showDeleteDialog}
-                />
-            )}
-            {showCreateDialog && (
-                <CreateJobDialog
-                    onConfirm={handleConfirmCreate}
-                    onCancel={() => setShowCreateDialog(false)}
-                    text={'New Job'}
-                    isDialogOpen={showCreateDialog}
-					selectedJob ={selectedJob}
-					availableClients={availableClients}
-                />
-            )}
+    <Paper className={tableClasses.mainTable}>
+      <AppBar position="static" >
+        <Toolbar color="primary">
+          <Typography variant="h6">{'Jobs'}</Typography>
+          <div className={tableClasses.header}>
+            <Tooltip title={'Add job'} onClick={() => { setShowCreateDialog(true) }}>
+              <IconButton className={tableClasses.active} size="large">
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
+          </div>
+        </Toolbar>
+      </AppBar>
+      <div className={tableClasses.tableWrapper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>{'Type'}</TableCell>
+              <TableCell>{'Description'}</TableCell>
+              <TableCell>{'Status'}</TableCell>
+              <TableCell>{'Client'}</TableCell>
+              <TableCell />
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {jobsDb.slice(paginationPage * paginationRows, paginationPage * paginationRows + paginationRows).map((job: Job) => (
+              <TableRow key={job.id} classes={{ root: 'small-row datatableRow' }}>
+                <TableCell className={tableClasses.tableRow}>{job.type}</TableCell>
+                <TableCell className={tableClasses.tableRow}>{job.description}</TableCell>
+                <TableCell className={tableClasses.tableRow}>{job.status}</TableCell>
+                <TableCell className={tableClasses.tableRow}>{job.client.firstName}</TableCell>
+                <TableCell className={tableClasses.tableRow}>
+                  <Tooltip
+                    color="primary"
+                    title={'Edit job'}
+                    onClick={() => { editJob(job) }}
+                  >
+                    <IconButton size={'small'}>
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+                <TableCell className={tableClasses.tableRow}>
+                  <Tooltip
+                    title={'Delete job'}
+                    onClick={() => { deleteJob(job) }}
+                  >
+                    <IconButton size={'small'} color="error">
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 15, 100]}
+                count={jobsDb.length}
+                rowsPerPage={paginationRows}
+                colSpan={9}
+                page={paginationPage}
+                labelDisplayedRows={({ from, to, count }) => `${from}-${to} of ${count}`}
+                labelRowsPerPage={'Rows per page'}
+                onPageChange={handlePaginationChange}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </div>
+      {showDeleteDialog && (
+        <ConfirmationDialogComponent
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setShowDeleteDialog(false)}
+          text={'Are you sure you want to delete this job?'}
+          isDialogOpen={showDeleteDialog}
+        />
+      )}
+      {showCreateDialog && (
+        <CreateJobDialog
+          onConfirm={handleConfirmCreate}
+          onCancel={() => setShowCreateDialog(false)}
+          text={'New Job'}
+          isDialogOpen={showCreateDialog}
+          selectedJob={selectedJob}
+          availableClients={availableClients}
+        />
+      )}
 
-            {showEditDialog && (
-                <CreateJobDialog
-                    onConfirm={handleConfirmEdit}
-                    onCancel={() => setShowEditDialog(false)}
-                    text={'Edit Job'}
-                    isDialogOpen={showEditDialog}
-					selectedJob ={selectedJob}
-					availableClients={availableClients}
-                />
-            )}
-        </Paper>
+      {showEditDialog && (
+        <CreateJobDialog
+          onConfirm={handleConfirmEdit}
+          onCancel={() => setShowEditDialog(false)}
+          text={'Edit Job'}
+          isDialogOpen={showEditDialog}
+          selectedJob={selectedJob}
+          availableClients={availableClients}
+        />
+      )}
+    </Paper>
   )
 }
 export default Jobs

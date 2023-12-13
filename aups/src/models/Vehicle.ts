@@ -6,5 +6,4 @@ export interface Vehicle {
     status: string
     type: string
     document: Document
-
 }

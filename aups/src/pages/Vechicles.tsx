@@ -60,6 +60,7 @@ const Vehicles = () => {
   }
 
   function editVehicle (vehicle: Vehicle) {
+    console.log(vehicle)
     setSelectedVehicle(vehicle)
     setShowEditDialog(true)
   }

@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import React, { useEffect, useState } from 'react'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
@@ -14,7 +12,8 @@ import useStyles from '../style/SideBar.style'
 import { getRole } from '../services/AuthService'
 import DirectionsCar from '@mui/icons-material/DirectionsCar'
 import PersonAdd from '@mui/icons-material/PersonAdd'
-import WorkIcon from '@mui/icons-material/Work';
+import WorkIcon from '@mui/icons-material/Work'
+import DocumentIcon from '@mui/icons-material/DocumentScanner'
 
 export interface SidebarListProps {
     onClose: () => void;
@@ -76,13 +75,13 @@ export function SidebarList (props: SidebarListProps) {
                         <SettingsIcon />
                     </SidebarListItem>
                 )}
-				{(<SidebarListItem
-                        closeSidebar={handleClose}
-                        url={'/jobs'}
-                        name="Jobs"
-                    >
-                        <WorkIcon />
-                    </SidebarListItem>
+                {(<SidebarListItem
+                    closeSidebar={handleClose}
+                    url={'/jobs'}
+                    name="Jobs"
+                >
+                    <WorkIcon />
+                </SidebarListItem>
                 )}
                 {isAdmin && (
                     <SidebarListItem
@@ -100,6 +99,15 @@ export function SidebarList (props: SidebarListProps) {
                         name="Users"
                     >
                         <PersonAdd />
+                    </SidebarListItem>
+                )}
+                {isAdmin && (
+                    <SidebarListItem
+                        closeSidebar={handleClose}
+                        url={'/documents'}
+                        name="Documents"
+                    >
+                        <DocumentIcon />
                     </SidebarListItem>
                 )}
             </List>

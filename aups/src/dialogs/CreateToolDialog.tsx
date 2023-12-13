@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -25,9 +24,9 @@ export function CreateToolDialog (props: CreateToolDialogProps) {
   const [name, setName] = useState(props.selectedTool?.name || '')
 
   function handleConfirm () {
-    const tool: Tool = { name: name} as Tool
+    const tool: Tool = { name } as Tool
     if (props.selectedTool) {
-		tool.id = props.selectedTool?.id
+      tool.id = props.selectedTool?.id
     }
     props.onConfirm(tool)
   }

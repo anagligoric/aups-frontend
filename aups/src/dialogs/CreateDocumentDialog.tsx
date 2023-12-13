@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -11,7 +10,6 @@ import { DialogContent, FormControl, MenuItem, Select, TextField } from '@mui/ma
 import { useForm, Controller } from 'react-hook-form'
 import { Document } from '../models/Document'
 import { Job } from '../models/Job'
-
 
 export interface CreateDocumentDialogProps {
   isDialogOpen: boolean;
@@ -31,7 +29,7 @@ export function CreateDocumentDialog (props: CreateDocumentDialogProps) {
   const [job, setJob] = useState(props.selectedDocument?.job || props.availableJobs[0])
 
   function handleConfirm () {
-	const document: Document = { number: number, creationDate: creationDate, price:price, job: job} as Document
+    const document: Document = { number, creationDate, price, job } as Document
     if (props.selectedDocument) {
       props.onConfirm(document, props.selectedDocument.id)
       return
@@ -106,7 +104,7 @@ export function CreateDocumentDialog (props: CreateDocumentDialogProps) {
             />
           )}
         />
-		<Controller
+        <Controller
           name="creationDate"
           defaultValue={creationDate}
           control={control}
@@ -118,8 +116,8 @@ export function CreateDocumentDialog (props: CreateDocumentDialogProps) {
           }}
           render={({ field }) => (
             <TextField
-			  id="date"
-			  type="date"
+              id="date"
+              type="date"
               {...field}
               variant="standard"
               fullWidth
@@ -131,28 +129,28 @@ export function CreateDocumentDialog (props: CreateDocumentDialogProps) {
             />
           )}
         /><Controller
-		name="price"
-		defaultValue={price}
-		control={control}
-		rules={{
-		  required: {
-			value: true,
-			message: 'Required'
-		  }
-		}}
-		render={({ field }) => (
-		  <TextField
-			{...field}
-			variant="standard"
-			fullWidth
-			required
-			label={'Price'}
-			margin="normal"
-			helperText={formState.errors?.price?.message?.toString() || ''}
-			error={!!formState.errors.price}
-		  />
-		)}
-	  /><FormControl fullWidth>
+          name="price"
+          defaultValue={price}
+          control={control}
+          rules={{
+            required: {
+              value: true,
+              message: 'Required'
+            }
+          }}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              variant="standard"
+              fullWidth
+              required
+              label={'Price'}
+              margin="normal"
+              helperText={formState.errors?.price?.message?.toString() || ''}
+              error={!!formState.errors.price}
+            />
+          )}
+        /><FormControl fullWidth>
           <Controller
             name={'job'}
             control={control}
