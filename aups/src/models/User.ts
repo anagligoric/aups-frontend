@@ -10,6 +10,7 @@ export interface User {
 }
 
 export interface UserDto {
+  id?: number;
   firstName: string
   surname: string
   email: string

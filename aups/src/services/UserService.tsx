@@ -18,6 +18,10 @@ export function getAllUser () {
   return axios.get('http://localhost:8081/api/user', { headers: { Authorization: authHeader() } })
 }
 
+export function getAllTechnicians () {
+  return axios.get('http://localhost:8081/api/user/technicians', { headers: { Authorization: authHeader() } })
+}
+
 export function getAllRoles () {
   return axios.get('http://localhost:8081/roles', { headers: { Authorization: authHeader() } })
 }

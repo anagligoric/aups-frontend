@@ -6,30 +6,35 @@ import Toolbar from '@mui/material/Toolbar'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
 import { useStyles } from '../style/Dialog.style'
-import { DialogContent, FormControl, MenuItem, Select, TextField } from '@mui/material'
+import { Autocomplete, Box, DialogContent, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { useForm, Controller } from 'react-hook-form'
 import { Document } from '../models/Document'
 import { Job } from '../models/Job'
+import { Vehicle } from '../models/Vehicle'
+import { Tool } from '../models/Tool'
 
 export interface CreateDocumentDialogProps {
   isDialogOpen: boolean;
   text: string;
   onConfirm: (document: Document, id?: number) => void;
   availableJobs: Job[]
-  onCancel?: () => void;
-  selectedDocument?: Document;
+  availableVehicles: Vehicle[]
+  availableTools: Tool[]
+  onCancel?: () => void
+  selectedDocument?: Document
 }
 
 export function CreateDocumentDialog (props: CreateDocumentDialogProps) {
   const { classes } = useStyles()
   const { watch, control, formState } = useForm({ mode: 'onChange' })
   const [number, setNumber] = useState(props.selectedDocument?.number || '')
-  const [creationDate, setCreationDate] = useState(props.selectedDocument?.creationDate || '')
   const [price, setPrice] = useState(props.selectedDocument?.price || '')
   const [job, setJob] = useState(props.selectedDocument?.job || props.availableJobs[0])
+  const [vehicle, setVehicle] = useState(props.selectedDocument?.vehicle || props.availableVehicles[0])
+  const [tools, setTools] = useState(props.selectedDocument?.tools || [])
 
   function handleConfirm () {
-    const document: Document = { number, creationDate, price, job } as Document
+    const document: Document = { number, creationDate: new Date(), price, job, vehicle, tools } as Document
     if (props.selectedDocument) {
       props.onConfirm(document, props.selectedDocument.id)
       return
@@ -44,21 +49,16 @@ export function CreateDocumentDialog (props: CreateDocumentDialogProps) {
   }
 
   const numberWatch = watch('number')
-  const creationDateWatch = watch('creationDate')
   const priceWatch = watch('price')
   const jobWatch = watch('job')
+  const vehicleWatch = watch('vehicle')
+  const toolsWatch = watch('tools')
 
   useEffect(() => {
     if (numberWatch) {
       setNumber(numberWatch)
     }
   }, [numberWatch])
-
-  useEffect(() => {
-    if (creationDateWatch) {
-      setCreationDate(creationDateWatch)
-    }
-  }, [creationDateWatch])
 
   useEffect(() => {
     if (priceWatch) {
@@ -71,6 +71,18 @@ export function CreateDocumentDialog (props: CreateDocumentDialogProps) {
       setJob(props.availableJobs.find(job => job.id === jobWatch) || job)
     }
   }, [jobWatch])
+
+  useEffect(() => {
+    if (vehicleWatch) {
+      setVehicle(props.availableVehicles.find(vehicle => vehicle.id === vehicleWatch) || vehicle)
+    }
+  }, [vehicleWatch])
+
+  useEffect(() => {
+    if (toolsWatch) {
+      setTools(toolsWatch)
+    }
+  }, [toolsWatch])
 
   return (
     <Dialog fullWidth open={props.isDialogOpen} onClose={handleCancel} data-testid="confirmation-dialog">
@@ -97,35 +109,10 @@ export function CreateDocumentDialog (props: CreateDocumentDialogProps) {
               autoFocus
               fullWidth
               required
-              label={'Number'}
+              label={'Document Number'}
               margin="normal"
               helperText={formState.errors?.number?.message?.toString() || ''}
               error={!!formState.errors.number}
-            />
-          )}
-        />
-        <Controller
-          name="creationDate"
-          defaultValue={creationDate}
-          control={control}
-          rules={{
-            required: {
-              value: true,
-              message: 'Required'
-            }
-          }}
-          render={({ field }) => (
-            <TextField
-              id="date"
-              type="date"
-              {...field}
-              variant="standard"
-              fullWidth
-              required
-              label={''}
-              margin="normal"
-              helperText={formState.errors?.creationDate?.message?.toString() || ''}
-              error={!!formState.errors.creationDate}
             />
           )}
         /><Controller
@@ -144,34 +131,105 @@ export function CreateDocumentDialog (props: CreateDocumentDialogProps) {
               variant="standard"
               fullWidth
               required
+              type='number'
               label={'Price'}
               margin="normal"
               helperText={formState.errors?.price?.message?.toString() || ''}
               error={!!formState.errors.price}
             />
           )}
-        /><FormControl fullWidth>
+        />
+        <Box marginTop={2}>
+          <FormControl fullWidth>
+            <InputLabel sx={{ marginLeft: '-15px' }}>
+              Job Description*
+            </InputLabel>
+            <Controller
+              name={'job'}
+              control={control}
+              defaultValue={job ? job.id : ''}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Required'
+                }
+              }}
+              render={({ field }) => (
+                <Select
+                  variant='standard'
+                  {...field}
+                  required
+                  label={'Job'}
+                >
+                  {props.availableJobs.map((option, index) => (
+                    <MenuItem key={index} value={option.id}>
+                      {option.description}
+                    </MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </FormControl>
+        </Box>
+        <Box marginTop={2}>
+          <FormControl fullWidth>
+            <InputLabel sx={{ marginLeft: '-15px' }}>
+              Vehicle*
+            </InputLabel>
+            <Controller
+              name={'vehicle'}
+              control={control}
+              defaultValue={vehicle ? vehicle.id : ''}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Required'
+                }
+              }}
+              render={({ field }) => (
+                <Select
+                  variant='standard'
+                  {...field}
+                  required
+                  label={'Vehicle'}
+                >
+                  {props.availableVehicles.map((option, index) => (
+                    <MenuItem key={index} value={option.id}>
+                      {option.licencePlate}
+                    </MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </FormControl>
+        </Box>
+
+        <FormControl fullWidth>
           <Controller
-            name={'job'}
+            name={'tools'}
             control={control}
-            defaultValue={job ? job.id : ''}
-            render={({ field }) => (
-              <Select
-                variant='standard'
-                {...field}
-                required
-                label={'Job'}
-              >
-                {props.availableJobs.map((option, index) => (
-                  <MenuItem key={index} value={option.id}>
-                    {option.description}
-                  </MenuItem>
-                ))}
-              </Select>
+            defaultValue={tools || []}
+            rules={{
+              required: {
+                value: true,
+                message: 'Required'
+              }
+            }}
+            render={({ field: { onChange, value } }) => (
+              <Autocomplete
+                multiple
+                options={props.availableTools}
+                getOptionLabel={(option) => option.name}
+                value={value}
+                onChange={(event, value) => onChange(value)}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" label="Select Tools" fullWidth />
+                )}
+                isOptionEqualToValue={(option, selectedValue) => option.id === selectedValue.id}
+              />
             )}
           />
         </FormControl>
-
       </DialogContent>
       <DialogActions className={classes.dialogActions}>
         <Button

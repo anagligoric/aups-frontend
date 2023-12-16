@@ -6,7 +6,7 @@ import Toolbar from '@mui/material/Toolbar'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
 import { useStyles } from '../style/Dialog.style'
-import { DialogContent, FormControl, MenuItem, Select, TextField } from '@mui/material'
+import { Box, DialogContent, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { useForm, Controller } from 'react-hook-form'
 import { User, UserDto } from '../models/User'
 import { mapRoleName } from '../services/UserService'
@@ -150,27 +150,33 @@ export function CreateUserDialog (props: CreateUserDialogProps) {
             />
           )}
         />
-        <FormControl fullWidth>
-          <Controller
-            name={'role'}
-            control={control}
-            defaultValue={role.id}
-            render={({ field }) => (
-              <Select
-                variant='standard'
-                {...field}
-                required
-                label={'Role'}
-              >
-                {props.availableRoles.map((option, index) => (
-                  <MenuItem key={index} value={option.id}>
-                    {mapRoleName(option.name)}
-                  </MenuItem>
-                ))}
-              </Select>
-            )}
-          />
-        </FormControl>
+        <Box marginTop={2}>
+          <FormControl fullWidth>
+            <InputLabel sx={{ marginLeft: '-15px' }}>
+              Role*
+            </InputLabel>
+            <Controller
+              name={'role'}
+              control={control}
+              defaultValue={role.id}
+              render={({ field }) => (
+                <Select
+                  variant='standard'
+                  {...field}
+                  required
+                  label={'Role'}
+                >
+                  {props.availableRoles.map((option, index) => (
+                    <MenuItem key={index} value={option.id}>
+                      {mapRoleName(option.name)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+
+          </FormControl>
+        </Box>
 
       </DialogContent>
       <DialogActions className={classes.dialogActions}>

@@ -20,11 +20,20 @@ import TablePagination from '@mui/material/TablePagination'
 import { useCloseableSnackbar } from '../hooks/useCloseableSnackbarHook'
 import { Document } from '../models/Document'
 import { Job } from '../models/Job'
-import { createDocument, deleteDocumentById, getAllDocuments, updateDocument } from '../services/DocumentService'
+import { createDocument, deleteDocumentById, getAllDocuments, getMyDocuments, updateDocument } from '../services/DocumentService'
 import { CreateDocumentDialog } from '../dialogs/CreateDocumentDialog'
-import { getAllJobs } from '../services/JobService'
+import { getAllJobs, getMyJobs } from '../services/JobService'
+import moment from 'moment'
+import { getAllVehicles } from '../services/VechicleService'
+import { Vehicle } from '../models/Vehicle'
+import { Tool } from '../models/Tool'
+import { getAllTools } from '../services/ToolService'
+import { getCurrentUserUsername } from '../services/AuthService'
 
-const Documents = () => {
+interface DocumentProps {
+  isAdmin: boolean;
+}
+const Documents = (props: DocumentProps) => {
   const { classes: tableClasses } = useTableStyles()
   const { enqueueErrorSnackbar, enqueueSuccessSnackbar } = useCloseableSnackbar()
 
@@ -35,16 +44,53 @@ const Documents = () => {
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [availableJobs, setAvailableJobs] = useState<Job[]>([])
+  const [availableVehicles, setAvailableVehicles] = useState<Vehicle[]>([])
+  const [availableTools, setAvailableTools] = useState<Tool[]>([])
 
   const [selectedDocument, setSelectedDocument] = useState<Document>()
+  const [currentUsername, setCurrentUsername] = useState(getCurrentUserUsername())
 
   useEffect(() => {
     loadDocuments()
   }, [])
 
   useEffect(() => {
-    getAllJobs().then((response) => {
-      setAvailableJobs(response.data)
+    if (props.isAdmin) {
+      getAllJobs().then((response) => {
+        setAvailableJobs(response.data)
+      })
+        .catch((error) => {
+          if (error.response.data) {
+            enqueueErrorSnackbar(error.response.data)
+          } else {
+            enqueueErrorSnackbar('Something went wrong')
+          }
+        })
+    } else {
+      getMyJobs(currentUsername).then((response) => {
+        setAvailableJobs(response.data)
+      })
+        .catch((error) => {
+          if (error.response.data) {
+            enqueueErrorSnackbar(error.response.data)
+          } else {
+            enqueueErrorSnackbar('Something went wrong')
+          }
+        })
+    }
+
+    getAllVehicles().then((response) => {
+      setAvailableVehicles(response.data)
+    })
+      .catch((error) => {
+        if (error.response.data) {
+          enqueueErrorSnackbar(error.response.data)
+        } else {
+          enqueueErrorSnackbar('Something went wrong')
+        }
+      })
+    getAllTools().then((response) => {
+      setAvailableTools(response.data)
     })
       .catch((error) => {
         if (error.response.data) {
@@ -55,10 +101,28 @@ const Documents = () => {
       })
   }, [])
 
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setCurrentUsername(getCurrentUserUsername())
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [])
+
   function loadDocuments () {
-    getAllDocuments().then((res: any) => {
-      setDocumentsDb(res.data)
-    })
+    if (props.isAdmin) {
+      getAllDocuments().then((res: any) => {
+        setDocumentsDb(res.data)
+      })
+    } else {
+      getMyDocuments(getCurrentUserUsername()).then((res: any) => {
+        setDocumentsDb(res.data)
+      })
+    }
   }
 
   function handlePaginationChange (event: unknown, newPage: number) {
@@ -96,7 +160,7 @@ const Documents = () => {
   }
 
   function handleConfirmCreate (document: Document) {
-    createDocument(document.number, document.creationDate, document.price, document.job).then(() => {
+    createDocument(document).then(() => {
       enqueueSuccessSnackbar('Document successfully added')
       setShowCreateDialog(false)
       loadDocuments()
@@ -110,8 +174,6 @@ const Documents = () => {
   }
 
   function handleConfirmEdit (document: Document, id?: number) {
-    console.log(id)
-    console.log(document)
     if (id) {
       updateDocument(id, document).then(() => {
         enqueueSuccessSnackbar('Document successfully edited')
@@ -145,10 +207,12 @@ const Documents = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>{'Number'}</TableCell>
+              <TableCell>{'Document Number'}</TableCell>
               <TableCell>{'Creation date'}</TableCell>
               <TableCell>{'Price'}</TableCell>
               <TableCell>{'Job description'}</TableCell>
+              <TableCell>{'Vehicle'}</TableCell>
+              <TableCell>{'Tools'}</TableCell>
               <TableCell />
               <TableCell />
             </TableRow>
@@ -157,9 +221,12 @@ const Documents = () => {
             {documentsDb.slice(paginationPage * paginationRows, paginationPage * paginationRows + paginationRows).map((document: Document) => (
               <TableRow key={document.id} classes={{ root: 'small-row datatableRow' }}>
                 <TableCell className={tableClasses.tableRow}>{document.number}</TableCell>
-                <TableCell className={tableClasses.tableRow}>{document.creationDate.toString()}</TableCell>
+                <TableCell className={tableClasses.tableRow}>{moment(document.creationDate).format('DD/MM/YYYY')}</TableCell>
                 <TableCell className={tableClasses.tableRow}>{document.price}</TableCell>
                 <TableCell className={tableClasses.tableRow}>{document.job.description}</TableCell>
+                <TableCell className={tableClasses.tableRow}>{document.vehicle.licencePlate}</TableCell>
+
+                <TableCell className={tableClasses.tableRow}>{document.tools.map(tool => (<div key={tool.id}>{tool.name}</div>))}</TableCell>
 
                 <TableCell className={tableClasses.tableRow}>
                   <Tooltip
@@ -214,10 +281,12 @@ const Documents = () => {
         <CreateDocumentDialog
           onConfirm={handleConfirmCreate}
           onCancel={() => setShowCreateDialog(false)}
-          text={'New Job'}
+          text={'New Document'}
           isDialogOpen={showCreateDialog}
           selectedDocument={selectedDocument}
           availableJobs={availableJobs}
+          availableVehicles={availableVehicles}
+          availableTools={availableTools}
         />
       )}
 
@@ -225,10 +294,12 @@ const Documents = () => {
         <CreateDocumentDialog
           onConfirm={handleConfirmEdit}
           onCancel={() => setShowEditDialog(false)}
-          text={'Edit Job'}
+          text={'Edit Document'}
           isDialogOpen={showEditDialog}
           selectedDocument={selectedDocument}
           availableJobs={availableJobs}
+          availableVehicles={availableVehicles}
+          availableTools={availableTools}
         />
       )}
     </Paper>

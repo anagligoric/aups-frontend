@@ -101,15 +101,15 @@ export function SidebarList (props: SidebarListProps) {
                         <PersonAdd />
                     </SidebarListItem>
                 )}
-                {isAdmin && (
-                    <SidebarListItem
-                        closeSidebar={handleClose}
-                        url={'/documents'}
-                        name="Documents"
-                    >
-                        <DocumentIcon />
-                    </SidebarListItem>
-                )}
+
+                <SidebarListItem
+                    closeSidebar={handleClose}
+                    url={'/documents'}
+                    name="Documents"
+                >
+                    <DocumentIcon />
+                </SidebarListItem>
+
             </List>
         </div>
   )

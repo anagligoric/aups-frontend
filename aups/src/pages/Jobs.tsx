@@ -18,13 +18,23 @@ import EditIcon from '@mui/icons-material/Edit'
 import TableFooter from '@mui/material/TableFooter'
 import TablePagination from '@mui/material/TablePagination'
 import { useCloseableSnackbar } from '../hooks/useCloseableSnackbarHook'
-import { Job } from '../models/Job'
-import { createJob, deleteJobById, getAllJobs, updateJob } from '../services/JobService'
+import { Job, JobDto, JobStatus } from '../models/Job'
+import { createJob, deleteJobById, getAllJobs, getMyJobs, updateJob, updateStatus } from '../services/JobService'
 import { CreateJobDialog } from '../dialogs/CreateJobDialog'
 import { Client } from '../models/Client'
 import { getAllClient } from '../services/ClientService'
+import FormGroup from '@mui/material/FormGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
+import { UserDto } from '../models/User'
+import { getAllTechnicians } from '../services/UserService'
+import { getCurrentUserUsername } from '../services/AuthService'
 
-const Jobs = () => {
+interface JobsProps {
+  isAdmin: boolean
+}
+
+const Jobs = (props: JobsProps) => {
   const { classes: tableClasses } = useTableStyles()
   const { enqueueErrorSnackbar, enqueueSuccessSnackbar } = useCloseableSnackbar()
 
@@ -35,8 +45,10 @@ const Jobs = () => {
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [availableClients, setAvailableClients] = useState<Client[]>([])
+  const [availableTechnicians, setAvailableTechnicians] = useState<UserDto[]>([])
 
   const [selectedJob, setSelectedJob] = useState<Job>()
+  const [currentUsername, setCurrentUsername] = useState(getCurrentUserUsername())
 
   useEffect(() => {
     loadJobs()
@@ -53,12 +65,41 @@ const Jobs = () => {
           enqueueErrorSnackbar('Something went wrong')
         }
       })
+
+    getAllTechnicians().then((response) => {
+      setAvailableTechnicians(response.data)
+    })
+      .catch((error) => {
+        if (error.response.data) {
+          enqueueErrorSnackbar(error.response.data)
+        } else {
+          enqueueErrorSnackbar('Something went wrong')
+        }
+      })
+  }, [])
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setCurrentUsername(getCurrentUserUsername())
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
   }, [])
 
   function loadJobs () {
-    getAllJobs().then((res: any) => {
-      setJobsDb(res.data)
-    })
+    if (props.isAdmin) {
+      getAllJobs().then((res: any) => {
+        setJobsDb(res.data)
+      })
+    } else {
+      getMyJobs(currentUsername).then((res: any) => {
+        setJobsDb(res.data)
+      })
+    }
   }
 
   function handlePaginationChange (event: unknown, newPage: number) {
@@ -95,8 +136,8 @@ const Jobs = () => {
     })
   }
 
-  function handleConfirmCreate (job: Job) {
-    createJob(job.type, job.description, job.client).then(() => {
+  function handleConfirmCreate (job: JobDto) {
+    createJob(job).then(() => {
       enqueueSuccessSnackbar('Job successfully added')
       setShowCreateDialog(false)
       loadJobs()
@@ -109,10 +150,10 @@ const Jobs = () => {
     })
   }
 
-  function handleConfirmEdit (job: Job, id?: number) {
+  function handleConfirmEdit (job: JobDto, id?: number) {
     if (id) {
       updateJob(id, job).then(() => {
-        enqueueSuccessSnackbar('User successfully edited')
+        enqueueSuccessSnackbar('Job successfully edited')
         setShowEditDialog(false)
         loadJobs()
       }).catch((error) => {
@@ -125,18 +166,33 @@ const Jobs = () => {
     }
   }
 
+  function updateJobStatus (id: number, status: JobStatus) {
+    updateStatus(id, status).then(() => {
+      enqueueSuccessSnackbar('Job status successfully edited')
+      loadJobs()
+    }).catch((error) => {
+      if (error.response.data) {
+        enqueueErrorSnackbar(error.response.data)
+      } else {
+        enqueueErrorSnackbar('Something went wrong')
+      }
+    })
+  }
+
   return (
     <Paper className={tableClasses.mainTable}>
       <AppBar position="static" >
         <Toolbar color="primary">
           <Typography variant="h6">{'Jobs'}</Typography>
-          <div className={tableClasses.header}>
-            <Tooltip title={'Add job'} onClick={() => { setShowCreateDialog(true) }}>
-              <IconButton className={tableClasses.active} size="large">
-                <AddIcon />
-              </IconButton>
-            </Tooltip>
-          </div>
+          {props.isAdmin && (
+            <div className={tableClasses.header}>
+              <Tooltip title={'Add job'} onClick={() => { setShowCreateDialog(true) }}>
+                <IconButton className={tableClasses.active} size="large">
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
+          )}
         </Toolbar>
       </AppBar>
       <div className={tableClasses.tableWrapper}>
@@ -147,8 +203,15 @@ const Jobs = () => {
               <TableCell>{'Description'}</TableCell>
               <TableCell>{'Status'}</TableCell>
               <TableCell>{'Client'}</TableCell>
-              <TableCell />
-              <TableCell />
+              <TableCell>{'Clients location'}</TableCell>
+              <TableCell>{'Technician'}</TableCell>
+              <TableCell>{'Change status'}</TableCell>
+              {props.isAdmin && (
+                <TableCell />
+              )}
+              {props.isAdmin && (
+                <TableCell />
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -156,20 +219,60 @@ const Jobs = () => {
               <TableRow key={job.id} classes={{ root: 'small-row datatableRow' }}>
                 <TableCell className={tableClasses.tableRow}>{job.type}</TableCell>
                 <TableCell className={tableClasses.tableRow}>{job.description}</TableCell>
-                <TableCell className={tableClasses.tableRow}>{job.status}</TableCell>
-                <TableCell className={tableClasses.tableRow}>{job.client.firstName}</TableCell>
+                <TableCell className={tableClasses.tableRow}>{job.status === JobStatus.IN_PROGRESS ? 'IN PROGRESS' : job.status}</TableCell>
+                <TableCell className={tableClasses.tableRow}>{`${job.client.firstName} ${job.client.surname}`}</TableCell>
+                <TableCell className={tableClasses.tableRow}>{`${job.client.city} ${job.client.street} ${job.client.number}`}</TableCell>
+                <TableCell className={tableClasses.tableRow}>{`${job.user.firstName} ${job.user.surname}`}</TableCell>
                 <TableCell className={tableClasses.tableRow}>
-                  <Tooltip
-                    color="primary"
-                    title={'Edit job'}
-                    onClick={() => { editJob(job) }}
-                  >
-                    <IconButton size={'small'}>
-                      <EditIcon />
-                    </IconButton>
-                  </Tooltip>
+                  <FormGroup>
+                    <FormControlLabel
+                      label={
+                        <Typography>
+                          {'In Progress'}
+                        </Typography>
+                      }
+                      control={
+                        <Checkbox
+                          checked={job.status === JobStatus.IN_PROGRESS}
+                          size="small"
+                          disabled={job.status === JobStatus.DONE}
+                          onClick={() => { updateJobStatus(job.id, JobStatus.IN_PROGRESS) }}
+                        />
+                      }
+                    />
+                    <FormControlLabel
+                      label={
+                        <Typography>
+                          {'Done'}
+                        </Typography>
+                      }
+                      control={
+                        <Checkbox
+                          checked={job.status === JobStatus.DONE}
+                          size="small"
+                          disabled={job.status === JobStatus.DONE || job.status === JobStatus.PENDING}
+                          onClick={() => { updateJobStatus(job.id, JobStatus.DONE) }}
+                        />
+                      }
+                    />
+                  </FormGroup>
                 </TableCell>
-                <TableCell className={tableClasses.tableRow}>
+
+                {props.isAdmin && (
+                  <TableCell className={tableClasses.tableRow}>
+                    <Tooltip
+                      color="primary"
+                      title={'Edit job'}
+                      onClick={() => { editJob(job) }}
+                    >
+                      <IconButton size={'small'}>
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                )}
+
+                {props.isAdmin && (<TableCell className={tableClasses.tableRow}>
                   <Tooltip
                     title={'Delete job'}
                     onClick={() => { deleteJob(job) }}
@@ -178,7 +281,8 @@ const Jobs = () => {
                       <DeleteIcon />
                     </IconButton>
                   </Tooltip>
-                </TableCell>
+                </TableCell>)}
+
               </TableRow>
             ))}
           </TableBody>
@@ -215,6 +319,7 @@ const Jobs = () => {
           isDialogOpen={showCreateDialog}
           selectedJob={selectedJob}
           availableClients={availableClients}
+          availableTechnicians={availableTechnicians}
         />
       )}
 
@@ -226,6 +331,7 @@ const Jobs = () => {
           isDialogOpen={showEditDialog}
           selectedJob={selectedJob}
           availableClients={availableClients}
+          availableTechnicians={availableTechnicians}
         />
       )}
     </Paper>

@@ -81,7 +81,7 @@ const Vehicles = () => {
   }
 
   function handleConfirmCreate (vehicle: Vehicle) {
-    createVehicle(vehicle.name, vehicle.status, vehicle.type).then(() => {
+    createVehicle(vehicle.name, vehicle.licencePlate, vehicle.type).then(() => {
       enqueueSuccessSnackbar('Vehicle successfully added')
       setShowCreateDialog(false)
       loadVehicles()
@@ -137,7 +137,7 @@ const Vehicles = () => {
                         {vehiclesDb.slice(paginationPage * paginationRows, paginationPage * paginationRows + paginationRows).map((vehicle: Vehicle) => (
                             <TableRow key={vehicle.id} classes={{ root: 'small-row datatableRow' }}>
                                 <TableCell className={tableClasses.tableRow}>{vehicle.name}</TableCell>
-                                <TableCell className={tableClasses.tableRow}>{vehicle.status}</TableCell>
+                                <TableCell className={tableClasses.tableRow}>{vehicle.licencePlate}</TableCell>
                                 <TableCell className={tableClasses.tableRow}>{vehicle.type}</TableCell>
                                 <TableCell className={tableClasses.tableRow}>
                                     <Tooltip

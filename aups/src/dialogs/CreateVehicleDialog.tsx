@@ -22,11 +22,11 @@ export function CreateVehicleDialog (props: CreateVehicleDialogProps) {
   const { classes } = useStyles()
 
   const [name, setName] = useState(props.selectedVehicle?.name || '')
-  const [licencePlate, setLicencePlate] = useState(props.selectedVehicle?.status || '')
+  const [licencePlate, setLicencePlate] = useState(props.selectedVehicle?.licencePlate || '')
   const [type, setType] = useState(props.selectedVehicle?.type || '')
 
   function handleConfirm () {
-    const vehicle: Vehicle = { name, status: licencePlate, type } as Vehicle
+    const vehicle: Vehicle = { name, licencePlate, type } as Vehicle
     if (props.selectedVehicle) {
       vehicle.id = props.selectedVehicle?.id
     }

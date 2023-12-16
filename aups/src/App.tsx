@@ -16,8 +16,8 @@ import useStyles from './style/Additional.style'
 import AdditionalPage from './pages/Additional'
 import Vehicles from './pages/Vechicles'
 import Users from './pages/Users'
-import Jobs from './pages/Job'
-import Documents from './pages/Document'
+import Jobs from './pages/Jobs'
+import Documents from './pages/Documents'
 
 function App () {
   const { classes } = useStyles()
@@ -83,8 +83,8 @@ function App () {
           <Route path="/clients" element={isAdmin ? <Clients /> : renderForbiddenPage()} />
           <Route path="/users" element={isAdmin ? <Users /> : renderForbiddenPage()} />
           <Route path="/vehicles" element={<Vehicles />} />
-          <Route path="/jobs" element={<Jobs />} />
-          <Route path="/documents" element={<Documents />} />
+          <Route path="/jobs" element={<Jobs isAdmin={isAdmin}/>} />
+          <Route path="/documents" element={<Documents isAdmin={isAdmin}/>} />
           <Route path='*' element={<AdditionalPage title='404 - Not Found' message='The page you are looking for might have been removed or is temporarily unavailable.' />} />
         </Routes>
       </ThemeProvider>
